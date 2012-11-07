@@ -1,9 +1,11 @@
 
 This is the opencoin issuer service.
 
+All the following locations are below /api base path.
+
 Overview:
- * GET /cdds/latest                      -> Returns current/latest CDD
- * GET /cdds/serial/<serial>             -> Returns a particular CDD which matches the serial
+ * GET /cdds/latest                     -> Returns current/latest CDD
+ * GET /cdds/serial/<serial>            -> Returns a particular CDD which matches the serial
  * GET /mintkeys/latest                 -> Returns the latest mintkeys
  * GET /mintkeys/id/<id>                -> Returns a particular mintkey which matches the id
  * GET /mintkeys/denomination/<denom.>  -> Returns the mintkeys for the particular denomination
