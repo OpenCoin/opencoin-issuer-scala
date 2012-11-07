@@ -32,11 +32,14 @@ object Finocle extends Logging{
   
   //TODO Add command line argumants. See http://github.com/scopt/scopt
   def main(args: Array[String]) {
+    val port: Int = Option(System getenv "PORT") match {
+      case Some(port) => port.toInt
+      case None => 8080
+    }
     val db: Database = Database.forURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
     val issuer = new Issuer(db)
-	val port = 8080
-	val host = "localhost"
-	val prefixPath = "api"
+    val host = "localhost"
+    val prefixPath = "api"
 
 	if (issuer.init) {
 		val handleExceptions = new HandleExceptions
