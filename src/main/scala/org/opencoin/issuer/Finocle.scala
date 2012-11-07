@@ -32,13 +32,9 @@ object Finocle extends Logging{
   
   //TODO Add command line argumants. See http://github.com/scopt/scopt
   def main(args: Array[String]) {
-    val port: Int = Option(System getenv "PORT") match {
-      case Some(port) => port.toInt
-      case None => 8080
-    }
+    val port = util.Properties.envOrElse("PORT", "8080").toInt
     val db: Database = Database.forURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
     val issuer = new Issuer(db)
-    val host = "localhost"
     val prefixPath = "api"
 
 	if (issuer.init) {
@@ -51,7 +47,7 @@ object Finocle extends Logging{
 		// Bind the service:
 		val server: Server = ServerBuilder()
 		  .codec(RichHttp[Request](Http()))
-		  .bindTo(new InetSocketAddress(host, port))
+		  .bindTo(new InetSocketAddress(port))
 		  .name("Finocle")
 		  .build(service)
 		println("Server started on port: %s" format port)
