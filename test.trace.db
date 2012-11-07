@@ -1,0 +1,79 @@
+09-20 15:54:36 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" not found; SQL statement:
+Select
+  CDD3.cdd_serial as CDD3_cdd_serial,
+  CDD3.type as CDD3_type
+From
+  CDD CDD3
+Where
+  (CDD3.cdd_serial = ?) [42102-127]
+09-20 16:04:30 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" not found; SQL statement:
+Select
+  CDD3.cdd_serial as CDD3_cdd_serial,
+  CDD3.type as CDD3_type
+From
+  CDD CDD3
+Where
+  (CDD3.cdd_serial = ?) [42102-127]
+09-20 16:06:46 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" not found; SQL statement:
+Select
+  CDD4.cdd_serial as CDD4_cdd_serial,
+  CDD4.issuer_cipher_suite as CDD4_issuer_cipher_suite,
+  CDD4.type as CDD4_type
+From
+  CDD CDD4
+Where
+  (CDD4.cdd_serial = ?) [42102-127]
+09-20 16:08:27 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" not found; SQL statement:
+Select
+  CDD9.currency_name as CDD9_currency_name,
+  CDD9.cdd_serial as CDD9_cdd_serial,
+  CDD9.additional_info as CDD9_additional_info,
+  CDD9.currency_divisor as CDD9_currency_divisor,
+  CDD9.issuer_cipher_suite as CDD9_issuer_cipher_suite,
+  CDD9.type as CDD9_type,
+  CDD9.cdd_expiry_date as CDD9_cdd_expiry_date,
+  CDD9.cdd_signing_date as CDD9_cdd_signing_date
+From
+  CDD CDD9
+Where
+  (CDD9.cdd_serial = ?) [42102-127]
+09-20 16:11:00 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" not found; SQL statement:
+Select
+  CDD9.currency_name as CDD9_currency_name,
+  CDD9.cdd_serial as CDD9_cdd_serial,
+  CDD9.additional_info as CDD9_additional_info,
+  CDD9.currency_divisor as CDD9_currency_divisor,
+  CDD9.issuer_cipher_suite as CDD9_issuer_cipher_suite,
+  CDD9.type as CDD9_type,
+  CDD9.cdd_expiry_date as CDD9_cdd_expiry_date,
+  CDD9.cdd_signing_date as CDD9_cdd_signing_date
+From
+  CDD CDD9
+Where
+  (CDD9.cdd_serial = ?) [42102-127]
+09-20 16:31:18 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "CDD" already exists; SQL statement:
+create table CDD (
+    currency_name varchar(128) not null,
+    cdd_serial int not null,
+    additional_info varchar(128) not null,
+    currency_divisor int not null,
+    issuer_cipher_suite varchar(128) not null,
+    type varchar(128) not null,
+    cdd_expiry_date date not null,
+    cdd_signing_date date not null
+  ) [42101-127]
+09-21 13:11:03 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "MINTKEY" not found; SQL statement:
+insert into MintKey (sign_coins_not_after, cdd_serial, denomination, sign_coins_not_before, coins_expiry_date, type) values (?,?,?,?,?,?) [42102-127]
+09-21 13:11:03 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "MINTKEY" not found; SQL statement:
+insert into MintKey (sign_coins_not_after, cdd_serial, denomination, sign_coins_not_before, coins_expiry_date, type) values (?,?,?,?,?,?) [42102-127]
+09-21 13:11:56 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Table "MINTKEY" not found; SQL statement:
+drop table MintKey [42102-127]
