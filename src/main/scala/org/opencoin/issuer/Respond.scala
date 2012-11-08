@@ -26,7 +26,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
     try {
 	  request.method -> Path(request.path) match {
 	    case GET -> Root => Future.value {
-		  val source = scala.io.Source.fromFile("static/index.html")
+		  val source = scala.io.Source.fromFile("static/index.html", "UTF-8")
 		  val data = source.mkString
 		  source.close ()
 		  log.debug("data: %s" format data)
@@ -94,7 +94,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  Responses.json(data, acceptsGzip(request))
 	    }
 	    case GET -> `basePath` => Future.value {
-		  val source = scala.io.Source.fromFile("static/gulden.html")
+		  val source = scala.io.Source.fromFile("static/gulden.html", "UTF-8")
 		  val data = source.mkString
 		  source.close ()
 		  log.debug("data: %s" format data)
