@@ -26,7 +26,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
     try {
 	  request.method -> Path(request.path) match {
 	    case GET -> Root => Future.value {
-		  val source = scala.io.Source.fromFile("~/static/index.html")
+		  val source = scala.io.Source.fromFile("static/index.html")
 		  val data = source.mkString
 		  source.close ()
 		  log.debug("data: %s" format data)
