@@ -51,10 +51,18 @@ object Responses extends Logging {
     response
   }
 
+  def html(info: String, gzip: Boolean = false) = {
+  	log.debug("Responses built, text, data: %s" format info)
+    val response = Response(Http11, OK)
+    response.mediaType = "text/html"
+    if (gzip) response.setHeader(CONTENT_ENCODING, GZIP)
+    response.content = content(info, gzip)
+    response
+  }
+
   def content(data: String, gzip: Boolean = false) = {
   	log.debug("Responses built, content, data: %s" format data)
 	if (gzip) {
-  	  log.debug("Responses built, gzip, data: %s" format data)
       val bytes   = new ByteArrayOutputStream
       val gzipper = new GZIPOutputStream(bytes)
       gzipper write data.getBytes(UTF_8)

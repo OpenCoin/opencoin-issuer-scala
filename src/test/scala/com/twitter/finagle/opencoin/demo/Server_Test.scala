@@ -1,6 +1,6 @@
 import org.scalatest.FlatSpec
 import scala.collection.mutable.Stack
-import com.twitter.finagle.opencoin.demo.Server
+import org.opencoin.issuer
 
 import java.net.InetSocketAddress
 import com.twitter.finagle.Codec
@@ -34,7 +34,7 @@ import com.twitter.finagle.http.Http
 import org.jboss.netty.handler.codec.http._
 import com.codahale.jerkson.Json._
 
-
+/*
 class StackSpec extends FlatSpec {
 	print("Database username: ")
     var databaseUsername = readLine
@@ -120,3 +120,4 @@ class StackSpec extends FlatSpec {
     	assert(Server.Response(method, request_str).toString() === res)
     }
 }
+*/

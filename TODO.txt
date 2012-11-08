@@ -1,0 +1,8 @@
+=To Dos=
+ * getLatestMintKeys fehlt
+ * Combine MintKey and MintKeyCertificate classes
+ * Specify proper field for algorithm-independent key format
+ * Create and sign a real valid CDD, MintKey and Coins for testing purposes.
+ * Implement Tests
+ * Implement "resume" mechanism
+ * Implement authentication and account-integration. Maybe with OAuth?

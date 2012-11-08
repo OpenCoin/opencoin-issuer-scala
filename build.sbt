@@ -4,7 +4,7 @@ seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
 // StartScriptPlugin.stage in Compile := Unit
 
-name := "Finocle"
+name := "Opencoin Issuer"
 
 version := "0.1"
 
@@ -38,7 +38,8 @@ libraryDependencies ++= Seq(
 	//"org.squeryl" %% "squeryl" % "0.9.5-2",
 	"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
 	"com.h2database" % "h2" % "1.2.127",
-	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5"
+	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5",
+	"org.scala-lang" % "scala-swing" % "2.9.2"
 )
 
 // seq(Revolver.settings: _*)

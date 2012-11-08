@@ -30,7 +30,7 @@ object CDDTable extends Table[FlatCDD]("CDD") {
   def renewal_service = column[List[URL]]("renewal_service", O NotNull)
   def invalidation_service = column[List[URL]]("invalidation_service", O NotNull)
   def denominations = column[List[Int]]("denominations", O NotNull)
-  def additional_info = column[String]("additional_info") //TODO make it optional _in opencoin spec_.
+  def additional_info = column[String]("additional_info")
 
   def * = latest ~ protocol_version ~ cdd_location ~ issuer_public_master_key ~ issuer_cipher_suite ~ cdd_serial ~ cdd_signing_date ~ cdd_expiry_date ~ currency_name ~ currency_divisor ~ info_service ~ validation_service ~ renewal_service ~ invalidation_service ~ denominations ~ additional_info <> (FlatCDD, FlatCDD.unapply _)
   

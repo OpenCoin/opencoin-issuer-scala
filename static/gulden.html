@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>Opencoin Issuer - Currency: Gulden</title>
+
+	<!-- Mobile viewport optimisation -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- (en) Add your meta data here -->
+	<!-- (de) Fuegen Sie hier ihre Meta-Daten ein -->
+
+	<link href="http://www.yaml.de/demos/css/flexible-grids.css" rel="stylesheet" type="text/css">
+	<!--[if lte IE 7]>
+	<link href="http://www.yaml.de/yaml/core/iehacks.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+<ul class="ym-skiplinks">
+	<li><a class="ym-skip" href="#nav">Skip to navigation (Press Enter)</a></li>
+	<li><a class="ym-skip" href="#main">Skip to main content (Press Enter)</a></li>
+</ul>
+
+<header>
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<h1>Opencoin Issuer</h1>
+		</div>
+	</div>
+</header>
+<nav id="nav">
+	<div class="ym-wrapper">
+		<div class="ym-hlist">
+			<ul>
+				<li><a href="/">Overview</a></li>
+				<li><a href="http://okfnpad.org/opencoin-v3">Specification Draft</a></li>
+				<li class="active"><strong>Currency: Gulden</strong></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div id="main">
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<section class="ym-grid linearize-level-1">
+				<article class="ym-g66 ym-gl content">
+					<div class="ym-gbox-left ym-clearfix">
+						<p>The following web services are available:
+						<table>
+							<tr>
+								<th>Request Type</th>
+								<th>URL</th>
+								<th>Description</th>
+							</tr>
+							<tr>
+								<td>GET</td>
+								<td><a href="cdds/latest">cdds/latest</a></td>
+								<td>Returns current/latest CDD</td>
+							</tr>
+							<tr>
+								<td>GET</td>
+								<td><a href="cdds/serial/123456789">cdds/serial/&lt;SERIAL&gt;</a></td>
+								<td>Returns a particular CDD which matches the serial</td>
+							</tr>
+							<tr>
+								<td>GET</td>
+								<td><a href="mintkeys/id/frt678uijhab">mintkeys/id/&lt;ID&gt;</a></td>
+								<td>Returns a particular mintkey which matches the id</td>
+							</tr>
+							<tr>
+								<td>GET</td>
+								<td><a href="mintkeys/denomination/2">mintkeys/denomination/&lt;DENOMINATION&gt;</a></td>
+								<td>Returns the mintkeys for the particular denomination</td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="validation">validation</a></td>
+								<td>Issues coins (precisely: blind signatures) when password "opencoin" is provided</td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="renewal">renewal</a></td>
+								<td>Renews coins (precisely: provides blind signatures) when blanks of equal value are provided</td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="invalidation">invalidation</a></td>
+								<td>Invalidates coins and credit their value to a not-implemented account</td>
+							</tr>
+							<tr>
+								<td>GET</td>
+								<td>resume</td>
+								<td>Allows to receive coins after a validation or renewal request during which the connection has been lost. Not yet implemented.</td>
+							</tr>
+						</table>
+						<p>Not sure if an additional interface is required to list all available CDDs and mintkeys.
+					</div>
+				</article>
+			</section>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="ym-wrapper">
+		<div class="ym-wbox">
+			<p>© opencoin 2012 – Layout based on <a href="http://www.yaml.de/">YAML</a></p>
+		</div>
+	</div>
+</footer>
+
+<!-- full skip link functionality in webkit browsers -->
+<script src="http://www.yaml.de/yaml/core/js/yaml-focusfix.js"></script>
+
+
+</body></html>
