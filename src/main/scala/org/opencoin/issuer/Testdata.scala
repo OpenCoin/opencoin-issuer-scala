@@ -18,6 +18,7 @@ import org.eintr.loglady.Logging
 object Testdata extends Logging {
   private val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
   
+  log.debug("Generating issuer key...")
   val issuerKeyPair = generateKeyPair(Base64("2342"), "RSA")
   //val issuerPublicKey = keyPair._1
   //val issuerPrivateKey = keyPair._2
@@ -46,6 +47,7 @@ object Testdata extends Logging {
 	private val cddSignature = sign(exampleCDD.canonical, examplePrivateIssuerKey, "SHA256withRSA")
 	val exampleFlatCDD: FlatCDD = exampleCDD.getFlatCDD(true, cddSignature)
 	
+        log.debug("Generating mint keys...")
 	val exampleMintKeys = generateFlatMintKeys(exampleCDD, examplePrivateIssuerKey)
 	
 	def generateFlatMintKeys(cdd: CDD, privKey: PrivateRSAKey): List[FlatMintKey] =
