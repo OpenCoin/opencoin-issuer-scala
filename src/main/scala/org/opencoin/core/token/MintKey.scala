@@ -1,15 +1,18 @@
 package org.opencoin.core.token
 
 import java.util.Date
+import java.math.BigInteger
 import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
+import org.opencoin.core.util.CanonicalJsonEncoder
+import org.opencoin.issuer.FlatMintKey
 
 case class MintKey (
     `type`: String = "mint key",
 	id: Base64,
     issuer_id: Base64,
     cdd_serial: Int,
-    public_mint_key: PublicMintKey, //TODO Encode this in Base64
+    public_mint_key: PublicRSAKey,
     denomination: Int,
     sign_coins_not_before: Date,
     sign_coins_not_after: Date,
@@ -25,7 +28,21 @@ case class MintKey (
   require(sign_coins_not_after != null)
   require(coins_expiry_date != null)
 
-  def serialization = BencodeEncoder.encode(this)
+  def canonical = CanonicalJsonEncoder.encode(this)
+  
+  def getFlatMintKey(signature: Base64): FlatMintKey = {
+	FlatMintKey (
+		this.id,
+		this.issuer_id,
+		this.cdd_serial,
+		this.public_mint_key.modulus,
+		this.public_mint_key.public_exponent,
+		this.denomination,
+		this.sign_coins_not_before,
+		this.sign_coins_not_after,
+		this.coins_expiry_date,
+		signature)
+  }
 }
 
 /*    def serialization: String =

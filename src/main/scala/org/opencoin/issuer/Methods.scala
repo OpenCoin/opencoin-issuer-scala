@@ -9,7 +9,7 @@ import org.opencoin.issuer.TypeMappers._
 import org.opencoin.issuer.Testdata._
 import org.opencoin.core.token._
 import org.opencoin.core.util.crypto
-import org.opencoin.core.util.crypto.RSAPrivKey
+//import org.opencoin.issuer.PrivateRSAKey
 import org.opencoin.core.util.Base64
 import org.scalaquery.session._
 import org.scalaquery.ql.extended.H2Driver.Implicit._
@@ -26,12 +26,12 @@ class Methods(db: Database) extends Logging {
       db withSession { session: Session => // passes the session
         CDDTable.ddl.create(session)
 	    log.debug("CDD Table created. Inserting example CDD...")
-		CDDTable.insert(exampleCdd)(session)
+		CDDTable.insert(exampleFlatCDD)(session)
 	    log.debug("Example CDD inserted. Creating MintKeyTable...")
 
 		MintKeyTable.ddl.create(session)
 	    log.debug("MintKeyTable created. Inserting example MintKey...")
-		MintKeyTable.insert(exampleMintKey)(session)
+		exampleMintKeys.foreach(MintKeyTable.insert(_)(session))
 	    log.debug("Example MintKey inserted. Creating DSDBTable...")
 
 		DSDBTable.ddl.create(session)
@@ -47,26 +47,16 @@ class Methods(db: Database) extends Logging {
 	}
   }
   
-  def getCdd(serial: Int): Option[CDD] = CDDTable.getCdd(db, serial) match {
-    case x: CDD => Some(x)
-	case _ => None
-  }
+  def getCdd(serial: Int) = CDDTable.getCdd(db, serial) 
 
-  def getLatestCdd(): Option[CDD] = CDDTable.getLatestCdd(db) match {
-    case x: CDD => Some(x)
-	case _ => None
-  }
+  def getLatestCdd() = CDDTable.getLatestCdd(db) 
 
-  def getMintKeyCertificate(id: Base64): Option[MintKeyCertificate] = MintKeyTable.getMintKeyCertificate(db, id) match {
-    case x: MintKeyCertificate => Some(x)
-	case _ => None
-  }
+  def getMintKeyCertificate(id: Base64) = MintKeyTable.getMintKeyCertificate(db, id)
 
-  def getMintKeyCertificates(denomination: Int): Option[List[MintKeyCertificate]] = MintKeyTable.getMintKeyCertificates(db, denomination) match {
-    case x: List[MintKeyCertificate] => Some(x)
-	case _ => None
-  }
-	
+  def getMintKeyCertificates(denomination: Int) = MintKeyTable.getMintKeyCertificates(db, denomination)
+
+  def getAllMintKeyCertificates = MintKeyTable.getAllMintKeyCertificates(db)
+
   def validate(token: String, blinds: List[Blind]): Option[List[BlindSignature]] = {
     val value = blinds.map(getDenomination).sum
   	log.debug("validate. Token: " + token + " Blinds: " + blinds.toString + " Value: " + value)
@@ -106,9 +96,10 @@ class Methods(db: Database) extends Logging {
   //################ Private methods: ##################
   
   private def mint(blind: Blind): BlindSignature = {
-	val mintkey: RSAPrivKey = MintKeyTable.getPrivateMintKey(db, blind.mint_key_id)
-	val hash = crypto.hash(blind.serialization, mintkey.hashAlg)
-	val signature: Base64 = crypto.sign(hash, mintkey, mintkey.signAlg)
+    import com.github.tototoshi.base64.{Base64 => Tototoshi}
+	val mintkey: PrivateRSAKey = PrivateKeyTable.get(db, blind.mint_key_id)
+	//val hash = crypto.hash(blind.canonical, mintkey.hashAlg) Hashing should be part of the sign method. Test it.
+	val signature: Base64 = crypto.sign(blind.canonical, mintkey, mintkey.cipher_suite)
 	BlindSignature("blind signature", blind.reference, signature)
   }
   
@@ -137,20 +128,24 @@ class Methods(db: Database) extends Logging {
   */
   private def isValid(coin: Coin): Boolean = {
     val mintkeycert = MintKeyTable.getMintKeyCertificate(db, coin.token.mint_key_id)
-    mintkeycert.mint_key.denomination == coin.token.denomination &&
-	  isValid(mintkeycert) &&
-	    notSpent(coin) &&
-          isValidSignature(coin, mintkeycert.mint_key.public_mint_key)
+	
+	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
+    val denomination = mintkeycert.mint_key.denomination == coin.token.denomination
+	val mintKeyCert = isValid(mintkeycert)
+	val spent = notSpent(coin)
+    val signature = isValidSignature(coin, mintkeycert.mint_key.public_mint_key)
+	
+	denomination && mintKeyCert && spent && signature
   }
 
-  private def isValidSignature(token: Array[Byte], signature: Array[Byte], key: PublicMintKey): Boolean = {
+  private def isValidSignature(token: Array[Byte], signature: Array[Byte], key: PublicRSAKey): Boolean = {
     import java.security.Signature
     import java.security.spec.RSAPublicKeySpec
     import java.security.KeyFactory
 	
     //Convert public key into java.security.PublicKey format
     //See this tutorial for details: http://www.java2s.com/Tutorial/Java/0490__Security/BasicRSAexample.htm
-    val spec = new RSAPublicKeySpec(key.modulus, key.publicExponent)
+    val spec = new RSAPublicKeySpec(new BigInteger(key.modulus.toString), new BigInteger(key.public_exponent.toString))
     val kf = KeyFactory.getInstance("RSA")
     val publicKey = kf.generatePublic(spec)
 	
@@ -161,21 +156,24 @@ class Methods(db: Database) extends Logging {
     sig.verify(signature)
   }
   
-  private def isValidSignature(coin: Coin, key: PublicMintKey): Boolean = 
-    isValidSignature(coin.serialization.getBytes, coin.signature.decode, key)
+  private def isValidSignature(coin: Coin, key: PublicRSAKey): Boolean = 
+    isValidSignature(coin.canonical.getBytes, coin.signature.decode, key)
 
   private def isValidSignature(cert: MintKeyCertificate): Boolean = 
-    isValidSignature(cert.mint_key.serialization.getBytes, cert.signature.decode, cert.mint_key.public_mint_key)
+    isValidSignature(cert.mint_key.canonical.getBytes, cert.signature.decode, cert.mint_key.public_mint_key)
 
   private def isValid(cert: MintKeyCertificate): Boolean = {
 	val today = new Date
-	val cdd = CDDTable.getCdd(db, cert.mint_key.cdd_serial)
+	val cddcert = CDDTable.getCdd(db, cert.mint_key.cdd_serial)
 	
-	cert.mint_key.sign_coins_not_before.before(today) &&
-	  cert.mint_key.coins_expiry_date.after(today) &&
-	    cdd.cdd_signing_date.before(today) &&
-          cdd.cdd_expiry_date.after(today) &&
-			isValidSignature(cert)
+	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
+	val sign_coins_not_before = cert.mint_key.sign_coins_not_before.before(today)
+	val coins_expiry_date = cert.mint_key.coins_expiry_date.after(today)
+	val cdd_signing_date = cddcert.cdd.cdd_signing_date.before(today)
+    val cdd_expiry_date = cddcert.cdd.cdd_expiry_date.after(today)
+	val signature = isValidSignature(cert)
+	
+	sign_coins_not_before && coins_expiry_date && cdd_signing_date && cdd_expiry_date && signature
   }
   
   private def notSpent(coin: Coin): Boolean = DSDBTable.notSpent(db, coin)
@@ -190,9 +188,10 @@ class Methods(db: Database) extends Logging {
 	
 	val keyGen: KeyPairGenerator  = KeyPairGenerator.getInstance("RSA")
 	val random: SecureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN")
-	keyGen.initialize(512, random)
+	keyGen.initialize(2048, random)
 	val keyPair: KeyPair = keyGen.genKeyPair()
 	val privateKey: RSAPrivateKey = keyPair.getPrivate().asInstanceOf[RSAPrivateKey]
+	//This may help: keyPair.getPrivate.asInstanceOf[RSAPrivateKey].getPrivateExponent
 	privateKey
   } */
   

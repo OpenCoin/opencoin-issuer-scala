@@ -18,9 +18,14 @@ package org.opencoin.core.util
 
 // Based on https://github.com/pyronicide/scala-bencode/
 
+import java.util.Date
+import java.net.URL
 import java.math.BigInteger
 
 object BencodeEncoder {
+  val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+  
+  def canonical = encode(this)
   /**
 * Generate a bencoded string from scala objects. This can handle the
 * entire bencoding grammar which means that Int, String, List and Map can be
@@ -31,7 +36,10 @@ object BencodeEncoder {
       case x: Int => int(x)
       case x: Long => int(x)
       case x: String => string(x)
-      case x: BigInteger => string(x)
+      case x: Base64 => string(x.toString)
+      case x: BigInteger => string(x.toString)
+      case x: URL => string(x.toString)
+      case x: Date => string(dateFormat.format(x))
       case x: List[_] => list(x)
       case x: Map[String, _] => dictionary(x)
       case x: AnyRef => encode(getCCParams(x))
@@ -46,9 +54,6 @@ object BencodeEncoder {
 
   private def string(input: String): String =
     input.length + ":" + input
-
-  private def string(input: BigInteger): String =
-    input.toString.length + ":" + input.toString
 
   private def list(input: List[_]): String =
     "l" + input.map( x => encode(x)).mkString + "e"

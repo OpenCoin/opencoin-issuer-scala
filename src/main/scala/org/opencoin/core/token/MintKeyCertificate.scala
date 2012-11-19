@@ -42,5 +42,5 @@ case class MintKeyCertificate(
 		coins_expiry_date),
 	  signature) */
   
-  def serialization = mint_key.serialization
+  //def serialization = mint_key.serialization
 }

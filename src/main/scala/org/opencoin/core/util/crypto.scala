@@ -1,45 +1,88 @@
 package org.opencoin.core.util.crypto
 
+import org.opencoin.core.token.PublicRSAKey
+import org.opencoin.issuer.PrivateRSAKey
 import org.opencoin.core.util.Base64
 import java.math.BigInteger
 import java.security.interfaces.RSAPrivateKey
+import java.security.interfaces.RSAPublicKey
 import java.security.KeyFactory
 import java.security.MessageDigest
 import java.security.Signature;
 import java.security.spec.RSAPrivateKeySpec
+import java.security.KeyPairGenerator
+import java.security.KeyPair
+import java.security.SecureRandom
+import org.eintr.loglady.Logging
+
+object generateKeyPair {
+  def apply(reference: Base64, cipher_suite: String): (PublicRSAKey, PrivateRSAKey) = {
+    //TODO cipher_suite is ignored for now. Instead RSA-2048 is used always.
+	val r = new scala.util.Random
+	val keyGen: KeyPairGenerator  = KeyPairGenerator.getInstance("RSA")
+	val random: SecureRandom = SecureRandom.getInstance("SHA1PRNG", "SUN")
+	keyGen.initialize(2048, random)
+	val keyPair: KeyPair = keyGen.genKeyPair()
+	val privateKey: RSAPrivateKey = keyPair.getPrivate.asInstanceOf[RSAPrivateKey]
+	val publicKey: RSAPublicKey = keyPair.getPublic.asInstanceOf[RSAPublicKey]
+	//This may help: keyPair.getPrivate.asInstanceOf[RSAPrivateKey].getPrivateExponent
+	val key_modulus = new Base64(privateKey.getModulus.toByteArray)
+	val key_public_exponent = new Base64(publicKey.getPublicExponent.toByteArray)
+	//val key_private_exponent = Base64(privateKey.getPrivateExponent.toString)
+	val privKey = PrivateRSAKey(reference, cipher_suite, privateKey.getModulus, privateKey.getPrivateExponent)
+	val pubKey = PublicRSAKey(key_modulus, key_public_exponent)
+	(pubKey, privKey)
+  }
+}
 
 object hash {
 
   /** create a SHA-256 hash from a String. Found in net.liftweb.util.SecurityHelpers */  
   //TODO A good library for more algorithms https://github.com/Nycto/Hasher
-  def apply(in: String, algorithm: String): String = algorithm match { 
+  def apply(in: String, algorithm: String): Base64 = algorithm match { 
     case "SHA-256" =>
-	  Base64.encode(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")).mkString)
+	  new Base64(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")))
+	  //Base64.encode(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")).mkString)
 	case _ => null
   }
 }
-
+/*
+  def sign(token: Array[Byte], key: PrivateMintKey): Base64 = {
+    import java.math.BigInteger
+    import java.security.Signature
+    import java.security.spec.RSAPrivateKeySpec
+    import java.security.KeyFactory
+	
+    //Convert public key into java.security.PublicKey format
+    //See this tutorial for details: http://www.java2s.com/Tutorial/Java/0490__Security/BasicRSAexample.htm
+    val spec = new RSAPrivateKeySpec(key.modulus, key.private_exponent)
+    val kf = KeyFactory.getInstance("RSA")
+    val privateKey = kf.generatePrivate(spec)
+	
+    //Sign
+    val sig: Signature = Signature.getInstance("SHA256withRSA") //If it fails, try Bouncycastle provider
+    sig.initSign(privateKey)
+    sig.update(token)
+    new Base64(sig.sign)
+  }
+  */
+/**
+ * Cipher Suite is ignored for now.
+**/
 object sign {
-  def apply(message: String, privkey: RSAPrivKey, cipherSuite: String): Base64 = {
-    //TODO Install Bouncycastle?
-    //import java.security.Security
-    //Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-
+  def apply(token: String, privkey: PrivateRSAKey, cipherSuite: String): Base64 = {
     //TODO Use different cipher suites and key lengths. ECDSA: https://github.com/baturinsky/Scala-Ecc#readme
-    require(cipherSuite=="RSA-2048")
+    //require(cipherSuite=="RSA-2048")
 
-	val privateKeySpec: RSAPrivateKeySpec = new RSAPrivateKeySpec(privkey.modulus, privkey.privateExponent)
+	val privateKeySpec: RSAPrivateKeySpec = new RSAPrivateKeySpec(privkey.modulus, privkey.private_exponent)
     val key: RSAPrivateKey = KeyFactory.getInstance("RSA").generatePrivate(privateKeySpec).asInstanceOf[RSAPrivateKey]
-    val signature: Signature = Signature.getInstance("RSA") //, "BC");
+    val signature: Signature = Signature.getInstance("SHA256withRSA")
     
     signature.initSign(key);
-    signature.update(message.getBytes());
+    signature.update(token.getBytes());
     new Base64(signature.sign())
   }
 }
-
-//case class RSAPrivKey(modulus: BigInt, privateExponent: BigInt, hashAlg: String, signAlg: String)
-case class RSAPrivKey(modulus: BigInteger, privateExponent: BigInteger, hashAlg: String, signAlg: String)
 
 /*
   def sign(message: String, secretKey: Key, cipherSuite: String): Base64 = {

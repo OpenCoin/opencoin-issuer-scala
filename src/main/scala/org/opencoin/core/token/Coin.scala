@@ -12,7 +12,7 @@ case class Coin(
   require(token != null)
   require(signature != null)
 
-  def serialization = token.serialization
+  def canonical = token.canonical
 }
 
 //import net.liftweb._

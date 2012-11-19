@@ -4,3 +4,9 @@ project/target
 project/plugins/target
 *~
 *.old
+.git
+.classpath
+./classes
+jansi.jar
+sbt*
+test*

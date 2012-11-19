@@ -4,6 +4,8 @@ import java.util.Date
 import java.net.URL
 import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
+import org.opencoin.core.token.CDDCertificate
+import org.opencoin.core.token.PublicRSAKey
 
 /**
  * This class enriches the CDD class with additional "latest" field to store it in the data base. It may be replaced by proper mapping (hiding field "latest") in Scalaquery eventually.
@@ -17,11 +19,12 @@ import org.opencoin.core.token.CDD
 **/
 case class FlatCDD (
 	latest: Boolean,
-  //  `type`: String = "cdd",
     protocol_version: URL,
     cdd_location: URL,
-    issuer_public_master_key: Base64,
     issuer_cipher_suite: String,
+    issuer_key_modulus: Base64,
+//	issuer_key_private_exponent: Base64,
+	issuer_key_public_exponent: Base64,
     cdd_serial: Int,
     cdd_signing_date: Date,
     cdd_expiry_date: Date,
@@ -32,33 +35,15 @@ case class FlatCDD (
     renewal_service: List[URL],
     invalidation_service: List[URL],
     denominations: List[Int],
-    additional_info: String) { //This field can be empty.
+    additional_info: String, //This field can be empty.
+	signature: Base64) {
 
-/*	def this(cdd: CDD) = this(
-		false,
-		"cdd", 
-		cdd.protocol_version, 
-		cdd.cdd_location, 
-		cdd.issuer_public_master_key, 
-		cdd.issuer_cipher_suite,
-		cdd.cdd_serial,
-		cdd.cdd_signing_date,
-		cdd.cdd_expiry_date,
-		cdd.currency_name,
-		cdd.currency_divisor,
-		cdd.info_service,
-		cdd.validation_service,
-		cdd.renewal_service,
-		cdd.invalidation_service,
-		cdd.denominations,
-		cdd.additional_info)
-		*/
 	def getCDD: CDD = CDD(
 		"cdd", 
 		protocol_version, 
 		cdd_location, 
-		issuer_public_master_key, 
 		issuer_cipher_suite,
+		PublicRSAKey(issuer_key_modulus, issuer_key_public_exponent),
 		cdd_serial,
 		cdd_signing_date,
 		cdd_expiry_date,
@@ -70,4 +55,31 @@ case class FlatCDD (
 		invalidation_service,
 		denominations,
 		additional_info)
+		
+	def getCDDCertificate: CDDCertificate = CDDCertificate(
+		"cdd certificate",
+		getCDD,
+		signature)
 }
+/*
+object FlatCDD {
+	def set(latest: Boolean, cdd: CDD, signature: Base64): FlatCDD = FlatCDD(
+		latest,
+		cdd.protocol_version, 
+		cdd.cdd_location,  
+		cdd.issuer_cipher_suite,
+		cdd.issuer_public_master_key.modulus,
+		cdd.issuer_public_master_key.public_exponent,
+		cdd.cdd_serial,
+		cdd.cdd_signing_date,
+		cdd.cdd_expiry_date,
+		cdd.currency_name,
+		cdd.currency_divisor,
+		cdd.info_service,
+		cdd.validation_service,
+		cdd.renewal_service,
+		cdd.invalidation_service,
+		cdd.denominations,
+		cdd.additional_info,
+		signature)
+} */

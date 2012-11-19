@@ -1,8 +1,10 @@
-=To Dos=
- * getLatestMintKeys fehlt
- * Combine MintKey and MintKeyCertificate classes
- * Specify proper field for algorithm-independent key format
- * Create and sign a real valid CDD, MintKey and Coins for testing purposes.
+To Dos
+======
  * Implement Tests
+ * Combine and appropriately rename MintKey and MintKeyCertificate classes. Same applies for CDD. E.g. CDD, CDDInner, CDDFlat, CDDTable.
+ * Now RSA-2048 format is hard-coded. Implement algorithm-independent key format and usage of appropriate cipher-suite.
  * Implement "resume" mechanism
+ * Implement error handling and appropriate error messages (for security reasons users shouldn't get very descriptive error messages)
+ * Implement certificate revokation mechanism. OCSP kind of style. getAllMintKeyCertificates may only return valid mintkeys. If information service should be used as a revocation service, responds may be need to be signed?
  * Implement authentication and account-integration. Maybe with OAuth?
+ * Many more.

@@ -9,6 +9,7 @@ import java.util.Date
 import java.net.URL
 import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
+import org.opencoin.core.token.CDDCertificate
 import org.opencoin.issuer.TypeMappers._
 import org.scalaquery.session.Database.threadLocalSession
 
@@ -18,8 +19,9 @@ object CDDTable extends Table[FlatCDD]("CDD") {
 //  def `type` = column[String]("type", O NotNull)
   def protocol_version = column[URL]("protocol_version", O NotNull)
   def cdd_location = column[URL]("cdd_location", O NotNull)
-  def issuer_public_master_key = column[Base64]("issuer_public_master_key", O NotNull)
   def issuer_cipher_suite = column[String]("issuer_cipher_suite", O NotNull)
+  def issuer_key_modulus = column[Base64]("issuer_key_modulus", O NotNull)
+  def issuer_key_public_exponent = column[Base64]("issuer_key_public_exponent", O NotNull)
   def cdd_serial = column[Int]("cdd_serial", O NotNull)
   def cdd_signing_date = column[Date]("cdd_signing_date", O NotNull)
   def cdd_expiry_date = column[Date]("cdd_expiry_date", O NotNull)
@@ -31,8 +33,9 @@ object CDDTable extends Table[FlatCDD]("CDD") {
   def invalidation_service = column[List[URL]]("invalidation_service", O NotNull)
   def denominations = column[List[Int]]("denominations", O NotNull)
   def additional_info = column[String]("additional_info")
-
-  def * = latest ~ protocol_version ~ cdd_location ~ issuer_public_master_key ~ issuer_cipher_suite ~ cdd_serial ~ cdd_signing_date ~ cdd_expiry_date ~ currency_name ~ currency_divisor ~ info_service ~ validation_service ~ renewal_service ~ invalidation_service ~ denominations ~ additional_info <> (FlatCDD, FlatCDD.unapply _)
+  def signature = column[Base64]("signature", O NotNull)
+  
+  def * = latest ~ protocol_version ~ cdd_location ~ issuer_cipher_suite ~ issuer_key_modulus ~ issuer_key_public_exponent ~ cdd_serial ~ cdd_signing_date ~ cdd_expiry_date ~ currency_name ~ currency_divisor ~ info_service ~ validation_service ~ renewal_service ~ invalidation_service ~ denominations ~ additional_info ~ signature <> (FlatCDD, FlatCDD.unapply _)
   
   //See https://groups.google.com/forum/?fromgroups=#!topic/scalaquery/x5ZmHrOaDKo
 //  def insert = `type` ~ protocol_version ~ cdd_location ~ issuer_public_master_key ~ issuer_cipher_suite ~ cdd_serial ~ cdd_signing_date ~ cdd_expiry_date ~ currency_name ~ currency_divisor ~ info_service ~ validation_service ~ renewal_service ~ invalidation_service ~ denominations ~ additional_info <> (CDD, CDD.unapply _)
@@ -40,12 +43,19 @@ object CDDTable extends Table[FlatCDD]("CDD") {
   //def forInsert = first ~ last <> ({ (f, l) => User(0, f, l) }, { u:
 	//User => Some((u.first, u.last)) })
 
-  def getCdd(db: Database, serial: Int): CDD = db withSession { //s: Session =>
-    (for { b <- CDDTable if b.cdd_serial === serial} yield b).first.getCDD
+/*  def getCdd(db: Database, serial: Int): Option[CDD] = db withSession { //s: Session =>
+    (for { b <- CDDTable if b.cdd_serial === serial} yield b).first.getCDD match {
+      case x: CDD => Some(x)
+	  case _ => None
+    }
   }
-  
-  def getLatestCdd(db: Database): CDD = db withSession { //s: Session =>
-    (for { b <- CDDTable if b.latest === true} yield b).first.getCDD
+  */
+  def getCdd(db: Database, serial: Int): CDDCertificate = db withSession { //s: Session =>
+    (for { b <- CDDTable if b.cdd_serial === serial} yield b).first.getCDDCertificate
+  }
+
+  def getLatestCdd(db: Database): CDDCertificate = db withSession { //s: Session =>
+    (for { b <- CDDTable if b.latest === true} yield b).first.getCDDCertificate
   }
 
 }

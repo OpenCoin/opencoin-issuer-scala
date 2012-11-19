@@ -1,14 +1,28 @@
 package org.opencoin.core.util
 
-/**
-* Based on https://github.com/pyronicide/scala-bencode/
-*/
+import java.util.Date
+import java.net.URL
+import java.math.BigInteger
+import org.eintr.loglady.Logging
 
-object CanonicalJsonEncoder {
+/**
+ * This class should implement all rules defined here: http://wiki.laptop.org/go/Canonical_JSON However, it's not compliant yet.
+ * Implementation is based on https://github.com/pyronicide/scala-bencode/
+**/
+
+object CanonicalJsonEncoder extends Logging {
+  val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+  
+  //def canonical: String = encode(this)
+  
   def encode(input: Any): String =
     input match {
       case x: Number => number(x)
       case x: String => string(x)
+      case x: Base64 => string(x.toString)
+      //case x: BigInteger => string(x.toString)
+      case x: URL => string(x.toString)
+      case x: Date => string(dateFormat.format(x))
 	  case x: Boolean => boolean(x)
       case x: List[_] => array(x)
       case x: Map[String, _] => `object`(x)
@@ -32,6 +46,7 @@ object CanonicalJsonEncoder {
     val s = "{" + input.toList.sortWith( (x,y) => x._1<y._1 ).map(
       x => (string(x._1), encode(x._2))).flatMap(
         x => x._1 + ":" + x._2 + "," ).mkString
+	log.debug("Normalized: " + s)
     s.substring(0,s.length-1) + "}" //Very ugly to remove last comma :-(
   }
   

@@ -23,9 +23,9 @@ libraryDependencies ++= Seq(
     "com.twitter" % "finagle-core" % "5.3.0",
     "com.twitter" % "finagle-http" % "5.3.0",
     // JSON
-    "org.codehaus.jackson" % "jackson-core-asl"  % "1.9.+",
-    "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.+",
-    "com.codahale" % "jerkson_2.9.1" % "0.5.+",
+    //"org.codehaus.jackson" % "jackson-core-asl"  % "1.9.+",
+    //"org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.+",
+    "com.codahale" % "jerkson_2.9.1" % "0.5.0", //"0.6.0-SNAPSHOT",
     // Logging
     "org.eintr.loglady" % "loglady_2.9.1" % "1.0.+",
     "ch.qos.logback" % "logback-classic" % "1.0.+",
@@ -38,8 +38,10 @@ libraryDependencies ++= Seq(
 	//"org.squeryl" %% "squeryl" % "0.9.5-2",
 	"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
 	"com.h2database" % "h2" % "1.2.127",
-	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5",
-	"org.scala-lang" % "scala-swing" % "2.9.2"
+	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5"
+	//"org.scala-lang" % "scala-swing" % "2.9.2"
 )
+
+scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 // seq(Revolver.settings: _*)

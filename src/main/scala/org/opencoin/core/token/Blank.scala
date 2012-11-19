@@ -2,6 +2,7 @@ package org.opencoin.core.token
 
 import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
+import org.opencoin.core.util.CanonicalJsonEncoder
 import java.net.URL
 
 case class Blank (
@@ -17,11 +18,12 @@ case class Blank (
   require(protocol_version != null)
   require(issuer_id != null)
   require(cdd_location != null)
-  require(denomination != 0)
+  require(denomination >= 0) //TODO This assumption needs to be confirmed with the specification.
   require(mint_key_id != null)
   require(serial != null)
 
-  def serialization = BencodeEncoder.encode(this)
+  //TODO This may become a trait, but first tests failed to execute.
+  def canonical = CanonicalJsonEncoder.encode(this)
   
 	/**
 	 * The object is serialized according to Bencode dictionary format. This excludes the
