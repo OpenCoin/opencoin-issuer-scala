@@ -1,1 +1,1 @@
-web: target/start Finocle
+web: target/start Issuer

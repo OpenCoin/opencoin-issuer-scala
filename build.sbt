@@ -4,7 +4,7 @@ seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
 // StartScriptPlugin.stage in Compile := Unit
 
-name := "Opencoin Issuer"
+name := "Issuer"
 
 version := "0.1"
 
@@ -20,8 +20,8 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
 	  // Finagle
-    "com.twitter" % "finagle-core" % "5.3.0",
-    "com.twitter" % "finagle-http" % "5.3.0",
+    "com.twitter" % "finagle-core" % "5.3.22",
+    "com.twitter" % "finagle-http" % "5.3.22",
     // JSON
     //"org.codehaus.jackson" % "jackson-core-asl"  % "1.9.+",
     //"org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.+",

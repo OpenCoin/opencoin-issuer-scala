@@ -12,10 +12,10 @@ object Issuer extends Logging{
 
   //TODO Add command line argumants. See http://github.com/scopt/scopt
   def main(args: Array[String]) {
-	if(args.length > 0) {
-		if(args(0) == "--admin") Wizard
-	}
-	else {
+	//if(args.length > 0) {
+	//	if(args(0) == "--admin") Wizard
+	//}
+	//else {
 		val port = util.Properties.envOrElse("PORT", "8080").toInt // Required for Heroku deployment
 		val db: Database = Database.forURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
 		val methods = new Methods(db)
@@ -37,6 +37,6 @@ object Issuer extends Logging{
 			println("Server started on port: %s" format port)
 		}
 		else println("ERROR: Init failed.")
-	  }
+	  //}
 	}
 }
