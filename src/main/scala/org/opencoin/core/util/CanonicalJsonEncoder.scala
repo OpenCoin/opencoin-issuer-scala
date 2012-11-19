@@ -26,7 +26,7 @@ object CanonicalJsonEncoder extends Logging {
 	  case x: Boolean => boolean(x)
       case x: List[_] => array(x)
       case x: Map[String, _] => `object`(x)
-      case x: AnyRef => encode(getCCParams(x))
+      //case x: AnyRef => encode(getCCParams(x))
       case _ => ""
     }
 
