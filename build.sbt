@@ -36,7 +36,7 @@ libraryDependencies ++= Seq(
     // Mysql Support
     //"mysql" % "mysql-connector-java" % "5.1.20"
 	//"org.squeryl" %% "squeryl" % "0.9.5-2",
-	"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
+	//"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
 	"com.h2database" % "h2" % "1.2.127",
 	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5"
 	//"org.scala-lang" % "scala-swing" % "2.9.2"
