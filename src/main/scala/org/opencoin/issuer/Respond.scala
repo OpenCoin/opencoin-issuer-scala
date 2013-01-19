@@ -5,6 +5,9 @@ import org.opencoin.core.util.Base64
 import org.opencoin.core.util.Base64Serializer
 import org.opencoin.core.util.Base64Deserializer
 import org.opencoin.core.util.CustomJson._
+import org.opencoin.core.messages.RequestValidationREST
+import org.opencoin.core.messages.RequestRenewalREST
+import org.opencoin.core.messages.RequestInvalidationREST
 import java.util.{NoSuchElementException => NoSuchElement}
 import com.twitter.util.Future
 import com.twitter.finagle.Service
@@ -40,7 +43,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  val source = scala.io.Source.fromFile("static/index.html", "UTF-8")
 		  val data = source.mkString
 		  source.close ()
-		  log.debug("data: %s" format data)
+		  log.debug("Static index file has been served.")
 		  Responses.html(data, acceptsGzip(request))
 	    }
 	    case GET -> `basePath` / "cdds" / "latest" => Future.value {
@@ -77,8 +80,8 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/validate has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[List[Any]](content) //Parse JSON syntax to object
-		  val data = CustomJson.generate(methods.validate(p.head.asInstanceOf[String], p.tail.asInstanceOf[List[Blind]])) //Generate JSON syntax from object
+		  val p = parse[RequestValidationREST](content) //Parse JSON syntax to object
+		  val data = CustomJson.generate(methods.validate(p.authorization, p.blinds)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
@@ -86,9 +89,9 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/renew has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[List[AnyRef]](content) //Parse JSON syntax to object
-		  val (coins, blind) = p partition (_.isInstanceOf[Coin]) //TODO test!
-		  val data = CustomJson.generate(methods.renew(coins.asInstanceOf[List[Coin]], blind.asInstanceOf[List[Blind]])) //Generate JSON syntax from object
+		  val p = parse[RequestRenewalREST](content) //Parse JSON syntax to object
+		  //val (coins, blind) = p partition (_.isInstanceOf[Coin]) //TODO test!
+		  val data = CustomJson.generate(methods.renew(p.coins, p.blinds)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
@@ -96,8 +99,8 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/invalidate has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[List[Any]](content) //Parse JSON syntax to object
-		  val data = CustomJson.generate(methods.invalidate(p.head.asInstanceOf[String], p.tail.asInstanceOf[List[Coin]])) //Generate JSON syntax from object
+		  val p = parse[RequestInvalidationREST](content) //Parse JSON syntax to object
+		  val data = CustomJson.generate(methods.invalidate(p.authorization, p.coins)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
