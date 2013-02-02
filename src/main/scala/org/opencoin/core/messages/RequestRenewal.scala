@@ -7,4 +7,4 @@ case class RequestRenewal(
     message_reference: Int,
     transaction_reference: Int,
     coins: List[Coin],
-    tokens: List[Blind])
+    blinds: List[Blind])

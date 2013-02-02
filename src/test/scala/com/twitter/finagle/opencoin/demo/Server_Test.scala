@@ -21,10 +21,10 @@ import java.net.NetworkInterface
 import scala.collection.JavaConversions._
 import java.lang.Exception
 //import org.squeryl.PrimitiveTypeMode._
-import org.squeryl.Schema
+/*import org.squeryl.Schema
 import org.squeryl.SessionFactory
 import org.squeryl.Session
-import org.squeryl.adapters.MySQLAdapter
+import org.squeryl.adapters.MySQLAdapter */
 import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
 import org.jboss.netty.handler.codec.http.{HttpRequest, HttpResponse, DefaultHttpResponse, QueryStringDecoder}
 import org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1

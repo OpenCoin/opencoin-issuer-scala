@@ -112,7 +112,7 @@ class Methods(db: Database) extends Logging {
   }
 
   private def sumCoins(coins: List[Coin]): Int =
-	coins.map(x => MintKeyTable.getMintKeyCertificate(db, x.token.mint_key_id).mint_key.denomination).sum
+	coins.map(x => MintKeyTable.getMintKeyCertificate(db, x.payload.mint_key_id).mint_key.denomination).sum
 
   private def sumBlinds(blinds: List[Blind]): Int =
 	blinds.map(x => MintKeyTable.getMintKeyCertificate(db, x.mint_key_id).mint_key.denomination).sum
@@ -127,10 +127,10 @@ class Methods(db: Database) extends Logging {
    *   the coin's serial is not in the DSDB
   */
   private def isValid(coin: Coin): Boolean = {
-    val mintkeycert = MintKeyTable.getMintKeyCertificate(db, coin.token.mint_key_id)
+    val mintkeycert = MintKeyTable.getMintKeyCertificate(db, coin.payload.mint_key_id)
 	
 	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
-    val denomination = mintkeycert.mint_key.denomination == coin.token.denomination
+    val denomination = mintkeycert.mint_key.denomination == coin.payload.denomination
 	val mintKeyCert = isValid(mintkeycert)
 	val spent = notSpent(coin)
     val signature = isValidSignature(coin, mintkeycert.mint_key.public_mint_key)

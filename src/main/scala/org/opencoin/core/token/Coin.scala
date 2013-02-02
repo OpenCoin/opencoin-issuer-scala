@@ -5,14 +5,14 @@ import scala.collection.immutable.HashMap
 
 case class Coin(
     `type`: String = "coin", 
-    token: Blank,
+    payload: Blank,
     signature: Base64) {
 	
   require(`type` == "coin")
-  require(token != null)
+  require(payload != null)
   require(signature != null)
 
-  def canonical = token.canonical
+  def canonical = payload.canonical
 }
 
 //import net.liftweb._

@@ -1,4 +1,8 @@
+import AssemblyKeys._ // put this at the top of the file
+
 import com.typesafe.startscript.StartScriptPlugin
+
+assemblySettings
 
 seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 

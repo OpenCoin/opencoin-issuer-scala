@@ -54,55 +54,98 @@
 							<tr>
 								<th>Request Type</th>
 								<th>URL</th>
+								<th>Content</th>
 								<th>Description</th>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td><a href="cdds/latest">cdds/latest</a></td>
+								<td></td>
 								<td>Returns current/latest CDD</td>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td><a href="cdds/serial/2342">cdds/serial/&lt;SERIAL&gt;</a></td>
+								<td></td>
 								<td>Returns a particular CDD which matches the serial</td>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td><a href="mintkeys/">mintkeys/</a></td>
+								<td></td>
 								<td>Returns all mintkeys which are valid at the time of request</td>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td><a href="mintkeys/id/<ID>">mintkeys/id/&lt;ID&gt;</a></td>
+								<td></td>
 								<td>Returns a particular mintkey which matches the id</td>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td><a href="mintkeys/denomination/2">mintkeys/denomination/&lt;DENOMINATION&gt;</a></td>
+								<td></td>
 								<td>Returns the mintkeys for the particular denomination</td>
 							</tr>
 							<tr>
 								<td>POST</td>
 								<td><a href="validation">validation</a></td>
-								<td>Issues coins (precisely: blind signatures) when password "opencoin" is provided</td>
+								<td><code>
+{
+    reference: crypto_random_number,
+    authorization: string,
+    tokens: [n blinds]
+} 
+								</code></td>
+								<td>Issues coins (precisely: blind signatures) when password "opencoin" is provided. The response is a JSON-formated list of BlindSignatures.</td>
 							</tr>
 							<tr>
 								<td>POST</td>
 								<td><a href="renewal">renewal</a></td>
-								<td>Renews coins (precisely: provides blind signatures) when blanks of equal value are provided</td>
+								<td><code>
+{
+    reference: crypto_random_number,
+    coins: [n coins],
+    tokens: [n blinds]
+} 
+								</code></td>
+								<td>Renews coins (precisely: provides blind signatures) when blanks of equal value are provided. The response is a JSON-formated list of BlindSignatures.</td>
 							</tr>
 							<tr>
 								<td>POST</td>
 								<td><a href="invalidation">invalidation</a></td>
-								<td>Invalidates coins and credit their value to a not-implemented account</td>
+								<td><code>
+{
+    authorization: string,
+    coins: [n coins]
+} 
+								</code></td>
+								<td>Invalidates coins and credit their value to a not-implemented account. The response should return a HTTP error code.</td>
 							</tr>
 							<tr>
 								<td>GET</td>
 								<td>resume</td>
+								<td></td>
 								<td>Allows to receive coins after a validation or renewal request during which the connection has been lost. Not yet implemented.</td>
 							</tr>
 						</table>
 						<p>Not sure if an additional interface is required to list all available CDDs and mintkeys.
+						<p>Alternatively to the REST-like API above, you may want to use the following message-oriented API instead. This one is compliant to the opencoin specification.
+						<table>
+							<tr>
+								<th>Request Type</th>
+								<th>URL</th>
+								<th>Content</th>
+								<th>Description</th>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="message-api">message-api</a></td>
+								<td><a href="http://www.hurl.it/hurls/4b427524d62b1d337568632f82f58703e8b6d5bb/d55a2085151582400f8e39f354cfb2d67af67553">Request CDD serial</a>
+								    <a href="http://www.hurl.it/hurls/0560b19d99fc9ce217aff9b3d98c9bf39b2576e6/5b540f835bfe9d15290ecbbda6dc4e97066a59f4">Request CDD</a></td>
+								<td>See the <a href="http://okfnpad.org/opencoin-v3">specification draft</a>.</td>
+							</tr>
+						</table>
 					</div>
 				</article>
 			</section>

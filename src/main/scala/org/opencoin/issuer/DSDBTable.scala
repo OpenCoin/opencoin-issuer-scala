@@ -26,7 +26,7 @@ object DSDBTable extends Table[DSDB]("DSDB") {
   //TODO Is verification against serial enough/good? Or should signature be considered too?
   def notSpent(db: Database, coin: Coin): Boolean = {
     db withSession { //s: Session =>
-      val res = for ( b <- DSDBTable if b.serial === coin.token.serial) yield b
+      val res = for ( b <- DSDBTable if b.serial === coin.payload.serial) yield b
 	  if(res == Nil) true
 	  else false
     }
@@ -35,7 +35,7 @@ object DSDBTable extends Table[DSDB]("DSDB") {
   def storeInDSDB(db: Database, coins: List[Coin]): Boolean = {
     val date = new Date
     db withSession { //s: Session => 
-	  coins.foreach(c => DSDBTable.insert(DSDB(c.token.serial, c.signature, c.token.mint_key_id, date)))
+	  coins.foreach(c => DSDBTable.insert(DSDB(c.payload.serial, c.signature, c.payload.mint_key_id, date)))
 	  //Maybe "insertAll" is faster than "insert", but the following doesn't work. Is it a bug in Scalaquery 0.9.5?
 	  //DSDBTable.insertAll(coins.map(c => DSDB(c.token.serial, c.signature, c.token.mint_key_id, date)))
 	}

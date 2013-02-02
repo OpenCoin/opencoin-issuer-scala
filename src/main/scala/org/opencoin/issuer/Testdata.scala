@@ -106,7 +106,7 @@ object Testdata extends Logging {
   
   val coin1 = Coin(
     `type` = "coin", 
-    token = blank1,
+    payload = blank1,
     signature = Base64("fr5678uhgtyy6")
   )
   
@@ -122,7 +122,7 @@ object Testdata extends Logging {
   
   val coin2 = Coin(
     `type` = "coin", 
-    token = blank2,
+    payload = blank2,
     signature = Base64("juytfvbji8")
   )
   
@@ -138,7 +138,7 @@ object Testdata extends Logging {
   
   val coin3 = Coin(
     `type` = "coin", 
-    token = blank3,
+    payload = blank3,
     signature = Base64("we4yery")
   )
 }

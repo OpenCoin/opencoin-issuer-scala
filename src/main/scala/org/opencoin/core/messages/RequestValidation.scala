@@ -7,4 +7,4 @@ case class RequestValidation(
     message_reference: Int,
     transaction_reference: Int,
     authorization_info: String,
-    tokens: List[Blind])
+    blinds: List[Blind])
