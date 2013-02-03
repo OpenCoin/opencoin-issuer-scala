@@ -121,10 +121,12 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  Responses.html(data, acceptsGzip(request))
 	    }
 	    case POST -> `basePath` / "message-api" => Future.value {
-		  log.debug("POST -> %s/message has been called." format basePath)
+		  log.debug("POST -> %s/message-api has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val data = CustomJson.generate(Messages.process(methods, content)) //Generate JSON syntax from object
+		  val data = Messages.process(methods, content)
+		  log.debug("Response: " + data.toString)
+		  //val data = CustomJson.generate(response) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }

@@ -2,7 +2,7 @@ package org.opencoin.core.token
 
 import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
-import org.opencoin.core.util.CanonicalJsonEncoder
+//import org.opencoin.core.util.CanonicalJsonEncoder
 import java.net.URL
 
 case class Blank (
@@ -23,7 +23,7 @@ case class Blank (
   require(serial != null)
 
   //TODO This may become a trait, but first tests failed to execute.
-  def canonical = CanonicalJsonEncoder.encode(this)
+  def canonical = BencodeEncoder.encode(this)
   
 	/**
 	 * The object is serialized according to Bencode dictionary format. This excludes the

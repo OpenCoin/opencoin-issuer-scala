@@ -135,15 +135,73 @@
 							<tr>
 								<th>Request Type</th>
 								<th>URL</th>
+								<th>Message Type</th>
 								<th>Content</th>
-								<th>Description</th>
+								<th>CURL</th>
 							</tr>
 							<tr>
 								<td>POST</td>
 								<td><a href="message-api">message-api</a></td>
-								<td><a href="http://www.hurl.it/hurls/4b427524d62b1d337568632f82f58703e8b6d5bb/d55a2085151582400f8e39f354cfb2d67af67553">Request CDD serial</a>
-								    <a href="http://www.hurl.it/hurls/0560b19d99fc9ce217aff9b3d98c9bf39b2576e6/5b540f835bfe9d15290ecbbda6dc4e97066a59f4">Request CDD</a></td>
-								<td>See the <a href="http://okfnpad.org/opencoin-v3">specification draft</a>.</td>
+								<td><a href="http://www.hurl.it/hurls/5729a656bba74c072e3b2644622896fdb0556bcf/421318f7c9833dfe2b37da034862ca149a60b910">Request CDD serial</a></td>
+								<td><code>{
+							    "message_reference": 10,
+							    "type": "request cdd serial"
+									}</code>
+								</td>
+								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd serial\",\"message_reference\":10}" http://localhost:8080/gulden/message-api</code></td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="message-api">message-api</a></td>
+								<td><a href="http://www.hurl.it/hurls/a8cdc1475af5e4f8479ee5d88119e0bf61141c8a/49a97b9e32f6a9726ac107ad82a79e2ac141ec58">Request CDD</a></td>
+								<td><code>{
+							    "message_reference": 10,
+							    "cdd_serial": 2342,
+							    "type": "request cdd serial"
+									}</code>
+								</td>
+								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd serial\",\"message_reference\":10,\"cdd_Serial\":2342}" http://localhost:8080/gulden/message-api</code></td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="message-api">message-api</a></td>
+								<td><a href="http://www.hurl.it/hurls/bbb159739c44148b984e91cf52c35cb9dd6c8f58/afdb4d3dc069ab5e7f505420ed43137424295712">Request mint keys by ID</a> <b>(The ID has to be updated!)</b></td>
+								<td><code>{
+    "message_reference": 2,
+    "mint_key_ids": [
+        "29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7"
+    ],
+    "denominations": [],
+    "type": "request mint keys"
+									}</code>
+								</td>
+								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\": 2,\"mint_key_ids\": [\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\"],\"denominations\": [],\"type\": \"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="message-api">message-api</a></td>
+								<td><a href="http://www.hurl.it/hurls/2841a85035457517a0b4552664eb44e585ed10f1/f8087e1175e13d6a70a62cd4dc9afe4c38662ec9">Request mint keys by denomination</a></td>
+								<td><code>{
+    "message_reference": 3,
+    "mint_key_ids": [],
+    "denominations": [1,2,5,10],
+    "type": "request mint keys"
+									}</code>
+								</td>
+								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[1,2,5,10],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
+							</tr>
+							<tr>
+								<td>POST</td>
+								<td><a href="message-api">message-api</a></td>
+								<td><a href="http://www.hurl.it/hurls/0deab13b8a629ce6bf9308b7e186212b483238c6/d71b3e97a6e48a861eee959f37ae6e8de601b198">Request all mint keys (without parameter)</a></td>
+								<td><code>{
+    "message_reference": 3,
+    "mint_key_ids": [],
+    "denominations": [],
+    "type": "request mint keys"
+									}</code>
+								</td>
+								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 						</table>
 					</div>

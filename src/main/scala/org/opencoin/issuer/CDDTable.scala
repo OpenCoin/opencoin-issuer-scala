@@ -9,7 +9,7 @@ import java.util.Date
 import java.net.URL
 import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
-import org.opencoin.core.token.CDDCertificate
+import org.opencoin.core.token.CDDCore
 import org.opencoin.issuer.TypeMappers._
 import org.scalaquery.session.Database.threadLocalSession
 
@@ -50,12 +50,12 @@ object CDDTable extends Table[FlatCDD]("CDD") {
     }
   }
   */
-  def getCdd(db: Database, serial: Int): CDDCertificate = db withSession { //s: Session =>
-    (for { b <- CDDTable if b.cdd_serial === serial} yield b).first.getCDDCertificate
+  def getCdd(db: Database, serial: Int): CDD = db withSession { //s: Session =>
+    (for { b <- CDDTable if b.cdd_serial === serial} yield b).first.getCDD
   }
 
-  def getLatestCdd(db: Database): CDDCertificate = db withSession { //s: Session =>
-    (for { b <- CDDTable if b.latest === true} yield b).first.getCDDCertificate
+  def getLatestCdd(db: Database): CDD = db withSession { //s: Session =>
+    (for { b <- CDDTable if b.latest === true} yield b).first.getCDD
   }
 
 }

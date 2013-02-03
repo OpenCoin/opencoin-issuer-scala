@@ -4,7 +4,7 @@ import java.util.Date
 import java.math.BigInteger
 import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
-import org.opencoin.core.util.CanonicalJsonEncoder
+//import org.opencoin.core.util.CanonicalJsonEncoder
 import org.opencoin.issuer.FlatMintKey
 
 case class MintKey (
@@ -28,7 +28,7 @@ case class MintKey (
   require(sign_coins_not_after != null)
   require(coins_expiry_date != null)
 
-  def canonical = CanonicalJsonEncoder.encode(this)
+  def canonical = BencodeEncoder.encode(this)
   
   def getFlatMintKey(signature: Base64): FlatMintKey = {
 	FlatMintKey (

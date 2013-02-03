@@ -20,6 +20,9 @@ For testing the issuer and its database, the following commands may be entered i
 	var l = List(coin1, coin2, coin3)
 	...
 
+curl -H "Content-Type: application/json" -i -X POST --data "{\"message_reference\":0,\"type\":\"request cdd serial\"}" http://localhost:8080/gulden/message-api
+
+
 License
 -------
 GPLv3. See LICENSE file.

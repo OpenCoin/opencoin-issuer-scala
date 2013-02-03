@@ -24,7 +24,7 @@ object Testdata extends Logging {
   //val issuerPrivateKey = keyPair._2
   val examplePrivateIssuerKey = issuerKeyPair._2
   
-  val exampleCDD = new CDD(
+  val exampleCDD = new CDDCore(
 	  //latest = true,
 	  `type` = "cdd",
 	  protocol_version = new URL("http://okfnpad.org/opencoin-v3"),
@@ -50,10 +50,10 @@ object Testdata extends Logging {
         log.debug("Generating mint keys...")
 	val exampleMintKeys = generateFlatMintKeys(exampleCDD, examplePrivateIssuerKey)
 	
-	def generateFlatMintKeys(cdd: CDD, privKey: PrivateRSAKey): List[FlatMintKey] =
+	def generateFlatMintKeys(cdd: CDDCore, privKey: PrivateRSAKey): List[FlatMintKey] =
 		cdd.denominations.map(generateFlatMintKey(_, cdd, privKey))
 	
-	def generateFlatMintKey(denom: Int, cdd: CDD, privKey: PrivateRSAKey): FlatMintKey = {
+	def generateFlatMintKey(denom: Int, cdd: CDDCore, privKey: PrivateRSAKey): FlatMintKey = {
 		val keyPair = generateKeyPair(Base64(cdd.cdd_serial.toString), cdd.issuer_cipher_suite)
 		val publicKey = keyPair._1
 		val r = new scala.util.Random

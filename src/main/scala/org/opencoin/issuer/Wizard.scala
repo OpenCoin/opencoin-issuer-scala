@@ -8,8 +8,8 @@ import java.security.KeyPair
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import org.eintr.loglady.Logging
+import org.opencoin.core.token.CDDCore
 import org.opencoin.core.token.CDD
-import org.opencoin.core.token.CDDCertificate
 import org.opencoin.core.token.PublicRSAKey
 import org.opencoin.core.util.Base64
 import org.scalaquery.session.Database
@@ -106,7 +106,7 @@ object Wizard extends Logging{
 	val additional_info = readLine
 	
 	println("Creating CDD...")
-	val cdd = CDD (
+	val cdd = CDDCore (
       "cdd",
       protocol_version,
       cdd_location,
@@ -129,7 +129,7 @@ object Wizard extends Logging{
 	println("Signature: " + signature)
 
 	println("Creating CDD Certificate...")
-	val cddcert = CDDCertificate("cdd certificate", cdd, signature)
+	val cddcert = CDD("cdd certificate", cdd, signature)
 	println("CDD Certificate created successfully: " + cddcert)
 	
 	println("Generating Mint Keys...")

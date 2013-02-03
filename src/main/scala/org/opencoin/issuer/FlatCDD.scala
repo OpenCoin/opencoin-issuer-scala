@@ -3,8 +3,8 @@ package org.opencoin.issuer
 import java.util.Date
 import java.net.URL
 import org.opencoin.core.util.Base64
+import org.opencoin.core.token.CDDCore
 import org.opencoin.core.token.CDD
-import org.opencoin.core.token.CDDCertificate
 import org.opencoin.core.token.PublicRSAKey
 
 /**
@@ -38,7 +38,7 @@ case class FlatCDD (
     additional_info: String, //This field can be empty.
 	signature: Base64) {
 
-	def getCDD: CDD = CDD(
+	def getCDDCore: CDDCore = CDDCore(
 		"cdd", 
 		protocol_version, 
 		cdd_location, 
@@ -56,9 +56,9 @@ case class FlatCDD (
 		denominations,
 		additional_info)
 		
-	def getCDDCertificate: CDDCertificate = CDDCertificate(
+	def getCDD: CDD = CDD(
 		"cdd certificate",
-		getCDD,
+		getCDDCore,
 		signature)
 }
 /*
