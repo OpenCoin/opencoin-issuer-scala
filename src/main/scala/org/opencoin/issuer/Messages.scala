@@ -6,6 +6,7 @@ import org.opencoin.core.util.CustomJson._
 import org.opencoin.core.messages._
 import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
+import org.opencoin.core.token.MintKeyCertificate
 //import org.opencoin.core.token.BlindSignature
 //import scala.collection.JavaConversions._ ?
 
@@ -38,18 +39,22 @@ object Messages extends Logging {
 		else CustomJson.generate(ResponseInvalidation("response invalidation", request.message_reference, 400, "Error"))
 	  }
 	  case "request mint keys" => {
-		//TODO implement in Methods class
+		//TODO implement in Methods class. What to do if both denomination and IDs are provided?
 	    val request = parse[RequestMintKeys](content)
 		if (request.mint_key_ids.isEmpty == false) {
-		  val mintkeys = request.mint_key_ids.map(x => methods.getMintKeyCertificate(Base64(x)))
+		  val mintkeys = methods.getMintKeyCertificatesById(request.mint_key_ids.map(Base64(_)))
+		  //val mintkeys = request.mint_key_ids.map(x => methods.getMintKeyCertificate(Base64(x)))
 		  CustomJson.generate(ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys))
 		}
 		else if (request.denominations.isEmpty == false) {
-		  val mintkeys = request.denominations.map(x => methods.getMintKeyCertificate(Base64(x.toString)))
+		  //val mintkeys = request.denominations.map(x => methods.getMintKeyCertificate(Base64(x.toString)))
+		  val mintkeys = methods.getMintKeyCertificates(request.denominations)
 		  CustomJson.generate(ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys))
 		}
-		//TODO what should happen if both, IDs and Denominations, are provided?
-		else CustomJson.generate(ResponseMintKeys("response mint keys", request.message_reference, 400, "Error", null))
+		else { //Provide all available mint keys
+		  val mintkeys = methods.getAllMintKeyCertificates
+		  CustomJson.generate(ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys))
+		}
 	  }
 	  case "request renewal" => {
 		val request = parse[RequestRenewal](content)

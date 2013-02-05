@@ -1,6 +1,7 @@
 package org.opencoin.issuer
 
 import java.math.BigInteger
+import org.eintr.loglady.Logging
 import org.scalaquery._
 import ql._
 import basic.{ BasicTable => Table, _ }
@@ -13,7 +14,7 @@ import org.opencoin.core.token.MintKeyCertificate
 import org.opencoin.issuer.TypeMappers._
 import org.scalaquery.session.Database.threadLocalSession
 
-object MintKeyTable extends Table[FlatMintKey]("MINTKEY") {
+object MintKeyTable extends Table[FlatMintKey]("MINTKEY") with Logging {
 
   def id = column[Base64]("id", O NotNull)
   def issuer_id = column[Base64]("issuer_id", O NotNull)
@@ -30,7 +31,8 @@ object MintKeyTable extends Table[FlatMintKey]("MINTKEY") {
   def * = id ~ issuer_id ~ cdd_serial ~ modulus ~ public_exponent ~ denomination ~ sign_coins_not_before ~ sign_coins_not_after ~ coins_expiry_date ~ signature <> (FlatMintKey, FlatMintKey.unapply _)
 
   def getMintKeyCertificate(db: Database, id: Base64): MintKeyCertificate = db withSession { //s: Session =>
-    (for { b <- MintKeyTable if b.id is id} yield b).first().getMintKeyCertificate
+	log.debug("getMintKeyCertificate called. ID: " + id)
+	(for { b <- MintKeyTable if b.id is id} yield b).first().getMintKeyCertificate
   }
 
   def getMintKeyCertificates(db: Database, denomination: Int): List[MintKeyCertificate] = db withSession { //s: Session =>

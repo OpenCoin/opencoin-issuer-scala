@@ -19,10 +19,12 @@ object TypeMappers {
   implicit val JavaUtilDateTypeMapper = MappedTypeMapper.base[java.util.Date, java.sql.Date] (
     x => new java.sql.Date(x.getTime), 
 	x => new java.util.Date(x.getTime))
-  implicit val Base64TypeMapper = MappedTypeMapper.base[Base64, java.sql.Blob] (
-    x => new SerialBlob(x.decode), 
-	x => new Base64(x.getBytes(1, x.length.toInt))) //Starting the position at 1 is correct.
-//  implicit val Base64TypeMapper = MappedTypeMapper.base[Base64, String] (_.toString, Base64(_))
+// Using a blob results in failed searches for ID with "Blob does not have a literal representation"
+//  implicit val Base64TypeMapper = MappedTypeMapper.base[Base64, java.sql.Blob] (
+//    x => new SerialBlob(x.decode), 
+//	  x => new Base64(x.getBytes(1, x.length.toInt))) //Starting the position at 1 is correct.
+//TODO choose a more efficient storage format than String
+  implicit val Base64TypeMapper = MappedTypeMapper.base[Base64, String] (_.toString, Base64(_))
   implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, Array[Byte]] (_.toByteArray, new BigInteger(_)) //TODO convert to java.sql.Blob
  // implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, String] (_.toString, new BigInteger(_)) //TODO convert to java.sql.Blob
   implicit val URLMapper = MappedTypeMapper.base[URL, String] (_.toString, new URL(_))

@@ -51,9 +51,13 @@ class Methods(db: Database) extends Logging {
 
   def getLatestCdd() = CDDTable.getLatestCdd(db) 
 
-  def getMintKeyCertificate(id: Base64) = MintKeyTable.getMintKeyCertificate(db, id)
+  //def getOneMintKey(id: Base64) = MintKeyTable.getMintKeyCertificate(db, id)
+
+  def getMintKeyCertificatesById(id: List[Base64]) = id.map(MintKeyTable.getMintKeyCertificate(db, _))
 
   def getMintKeyCertificates(denomination: Int) = MintKeyTable.getMintKeyCertificates(db, denomination)
+
+  def getMintKeyCertificates(denomination: List[Int]) = denomination.flatMap(MintKeyTable.getMintKeyCertificates(db, _))
 
   def getAllMintKeyCertificates = MintKeyTable.getAllMintKeyCertificates(db)
 

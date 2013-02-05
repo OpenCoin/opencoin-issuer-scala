@@ -66,7 +66,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 	    }
 	    case GET -> `basePath` / "mintkeys" / "id" / id => Future.value {
 		  log.debug("GET -> %s/mintkeys/id/<id> has been called." format basePath)
-		  val data = CustomJson.generate(methods.getMintKeyCertificate(Base64(id))) //Generate JSON syntax from object
+		  val data = CustomJson.generate(methods.getMintKeyCertificatesById(List(Base64(id)))) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
