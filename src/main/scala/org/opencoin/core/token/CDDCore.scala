@@ -10,7 +10,7 @@ import scala.collection.immutable.TreeSet
 
 case class CDDCore(
     `type`: String = "cdd", 
-    protocol_version: URL, 
+    protocol_version: URL,
     cdd_location: URL, 
     issuer_cipher_suite: String, 
     issuer_public_master_key: PublicRSAKey, 
@@ -19,10 +19,10 @@ case class CDDCore(
     cdd_expiry_date: Date, 
     currency_name: String, 
     currency_divisor: Int, 
-    info_service: List[URL], 
-    validation_service: List[URL], 
-    renewal_service: List[URL], 
-    invalidation_service: List[URL], 
+    info_service: List[(Int, URL)], 
+    validation_service: List[(Int, URL)], 
+    renewal_service: List[(Int, URL)], 
+    invalidation_service: List[(Int, URL)], 
     denominations: List[Int], 
     additional_info: String) //This field can be empty.
 	//extends BencodeEncoder
@@ -58,10 +58,14 @@ case class CDDCore(
 		CDDCore.this.cdd_expiry_date,
 		CDDCore.this.currency_name,
 		CDDCore.this.currency_divisor,
-		CDDCore.this.info_service,
-		CDDCore.this.validation_service,
-		CDDCore.this.renewal_service,
-		CDDCore.this.invalidation_service,
+		CDDCore.this.info_service.map(x => x._1),
+		CDDCore.this.info_service.map(x => x._2),
+		CDDCore.this.validation_service.map(x => x._1),
+		CDDCore.this.validation_service.map(x => x._2),
+		CDDCore.this.renewal_service.map(x => x._1),
+		CDDCore.this.renewal_service.map(x => x._2),
+		CDDCore.this.invalidation_service.map(x => x._1),
+		CDDCore.this.invalidation_service.map(x => x._2),
 		CDDCore.this.denominations,
 		CDDCore.this.additional_info,
 		signature)

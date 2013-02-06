@@ -30,10 +30,14 @@ case class FlatCDD (
     cdd_expiry_date: Date,
     currency_name: String,
     currency_divisor: Int,
-    info_service: List[URL],
-    validation_service: List[URL],
-    renewal_service: List[URL],
-    invalidation_service: List[URL],
+    info_service_prio: List[Int],
+    info_service_url: List[URL],
+    validation_service_prio: List[Int],
+    validation_service_url: List[URL],
+    renewal_service_prio: List[Int],
+    renewal_service_url: List[URL],
+    invalidation_service_prio: List[Int],
+    invalidation_service_url: List[URL],
     denominations: List[Int],
     additional_info: String, //This field can be empty.
 	signature: Base64) {
@@ -49,10 +53,10 @@ case class FlatCDD (
 		cdd_expiry_date,
 		currency_name,
 		currency_divisor,
-		info_service,
-		validation_service,
-		renewal_service,
-		invalidation_service,
+		info_service_prio.zip(info_service_url),
+		validation_service_prio.zip(validation_service_url),
+		renewal_service_prio.zip(renewal_service_url),
+		invalidation_service_prio.zip(invalidation_service_url),
 		denominations,
 		additional_info)
 		

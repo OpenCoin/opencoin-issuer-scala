@@ -36,10 +36,10 @@ object Testdata extends Logging {
 	  cdd_expiry_date = dateFormat.parse("2013-12-31T12:00:00Z"),
 	  currency_name = "Gulden",
 	  currency_divisor = 1,
-	  info_service = List(new URL("https://mighty-lake-9219.herokuapp.com/gulden/mintkeys/")),
-	  validation_service = List(new URL("https://mighty-lake-9219.herokuapp.com/gulden/validation")),
-	  renewal_service = List(new URL("https://mighty-lake-9219.herokuapp.com/gulden/renewal")),
-	  invalidation_service = List(new URL("https://mighty-lake-9219.herokuapp.com/gulden/invalidation")),
+	  info_service = List((10, new URL("https://mighty-lake-9219.herokuapp.com/gulden/mintkeys/"))),
+	  validation_service = List((10, new URL("https://mighty-lake-9219.herokuapp.com/gulden/validation"))),
+	  renewal_service = List((10, new URL("https://mighty-lake-9219.herokuapp.com/gulden/renewal"))),
+	  invalidation_service = List((10, new URL("https://mighty-lake-9219.herokuapp.com/gulden/invalidation"))),
 	  denominations = List(1,2,5,10),
 	  additional_info = "This CDD is for testing purposes only.")
 	  //signature = Base64("FIumYIFs07MBZGQ+DsmJLnUGVydDMPqe9yWAxIhNQ5Tc+uePqHa/d5ns6XALWoVd3ol3bsQCXCkRVOsYk3PYGVo+VQGQAZ4CyrlKPEiHHXHrDYVVtO+UOegy7lQlaQ3dec7TfC8UKS0dfXKju/RioXoF2tOHUDwldxQnph93JBLJxRt1AJacBmwZwiHV/fxplZI471vlRgEHZmJwUDHWUo1ODbOgZ5aZY4cMqzlFr6hBFP44CKmiBo+jgdQj4sTYswgqN7WjDmquBH30U0r+O4vD3vkyR6JLQwkz3qvy7iHCWBmy0dNrtyXdhgGYQ1afUH/+1ltbOV3ekG6rid9xhg=="))

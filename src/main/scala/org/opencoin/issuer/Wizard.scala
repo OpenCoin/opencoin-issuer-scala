@@ -82,10 +82,10 @@ object Wizard extends Logging{
 	
 	val base_url = "https://mighty-lake-9219.herokuapp.com/"
 	val cdd_location = new URL(base_url + currency_name + "/cdds/serial/" + cdd_serial)
-	val info_service = List(new URL(base_url + currency_name + "/mintkeys/"))
-	val validation_service = List(new URL(base_url + currency_name + "/validation"))
-	val renewal_service = List(new URL(base_url + currency_name + "/renewal"))
-	val invalidation_service = List(new URL(base_url + currency_name + "/invalidation"))
+	val info_service = List((10, new URL(base_url + currency_name + "/mintkeys/")))
+	val validation_service = List((10, new URL(base_url + currency_name + "/validation")))
+	val renewal_service = List((10, new URL(base_url + currency_name + "/renewal")))
+	val invalidation_service = List((10, new URL(base_url + currency_name + "/invalidation")))
 	
 	var denominations = List(1,2,5,10)
 	println("Denominations ["+denominations+"] :")
