@@ -5,14 +5,14 @@ import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 
 case class Blind(
-    `type`: String = "blinded token hash",
+    `type`: String = "blinded payload hash",
     reference: Int,
-    blinded_token_hash: Base64,
+    blinded_payload_hash: Base64,
     mint_key_id: Base64) {
 	
-  require(`type` == "blinded token hash")
+  require(`type` == "blinded payload hash")
   require(reference != 0)
-  require(blinded_token_hash != null)
+  require(blinded_payload_hash != null)
   require(mint_key_id != null)
   
   def canonical: String = BencodeEncoder.encode(this)
