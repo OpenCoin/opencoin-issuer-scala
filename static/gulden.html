@@ -49,7 +49,8 @@
 			<section class="ym-grid linearize-level-1">
 				<article class="ym-g66 ym-gl content">
 					<div class="ym-gbox-left ym-clearfix">
-						<p>The following web services are available:
+						<p>Two alternative APIs are available, a REST-like and a message-oriented API.
+						<h2>REST-like API</h2>
 						<table>
 							<tr>
 								<th>Request Type</th>
@@ -130,6 +131,7 @@
 							</tr>
 						</table>
 						<p>Not sure if an additional interface is required to list all available CDDs and mintkeys.
+						<h2>Message-Oriented API</h2>
 						<p>Alternatively to the REST-like API above, you may want to use the following message-oriented API instead. This one is compliant to the opencoin specification. The URL <a href="message-api">message-api</a> is accessed with HTTP POST.
 						<table>
 							<tr>
@@ -138,7 +140,7 @@
 								<th>cURL</th>
 							</tr>
 							<tr>
-								<td><a href="http://www.hurl.it/hurls/57d371e095abf9f8472e30184a8d2c83b0e2fa9a/82c5a36407aa6e0ce0faa449623c5c880de0835e">Request CDD serial</a></td>
+								<td><a href="http://www.hurl.it/hurls/57d371e095abf9f8472e30184a8d2c83b0e2fa9a/82c5a36407aa6e0ce0faa449623c5c880de0835e">Request CDD serial (Get latest CDD's serial)</a></td>
 								<td><code>{
 							    "message_reference": 10,
 							    "type": "request cdd serial"
@@ -147,7 +149,7 @@
 								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd serial\",\"message_reference\":10}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 							<tr>
-								<td><a href="http://www.hurl.it/hurls/a670a74f74fa44f98281633a39651927860f55cd/00b4d6bb799a82fa8861f1a79812be51397da50c">Request CDD</a></td>
+								<td><a href="http://www.hurl.it/hurls/54b008a20a17d7206cc090db060f0108be11f455/ea03a215531794f4c34bfbb1f5b6954f0de63aa0">Request CDD</a></td>
 								<td><code>{
 							    "message_reference": 10,
 							    "cdd_serial": 2342,
@@ -192,7 +194,7 @@
 								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 							<tr>
-								<td><a href="">Request Validation</a></td>
+								<td>Request Validation</td>
 								<td><code>{
     "message_reference": 5,
     "transaction_reference": "b0341c1f512c215f54a0c84017d02a25",
@@ -237,7 +239,7 @@
 								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":5,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"authorization_info\":\"password\",\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"79a555e7758409f23299e715e6ae998fc0a129ddc150f8a312621b27e965816b9bb198e423d0a7b36340f54814a1372ee272535a55de72c298a502efb74ee7ff\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"50e630140f21a86b0f95962c50d430ce740bbf8896843c581697dc4aa7575edfc66c29661a1e75f2aca1f1806e947a13fffd9a32dba7383c7472eaba7cb68091\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"6a0e8f7562abfd4318965abdaa3b606cddbc25ddb3ce9cfffc53045c6bd5af31e2a0d3df3d2da75f3caf4bcceb5a52978fc261e7576c0b60d66b6bac273e0860\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_3\",\"blinded_payload_hash\":\"1ad3d379f29d83971be7b010ad899189616af99acd8280d81a37b09b5c6bfef28903696f79046345064b12238b940478658e48477d49e39f0e1ba0c9740ed98d\",\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"type\":\"blinded payload hash\"}],\"type\":\"request validation\"}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 							<tr>
-								<td><a href="">Request Resume</a></td>
+								<td>Request Resume</td>
 								<td><code>
 {
     "message_reference": 6,
@@ -248,7 +250,7 @@
 								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":6,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"type\":\"request resume\"}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 							<tr>
-								<td><a href="">Request Renewal</a></td>
+								<td>Request Renewal</td>
 								<td><code>
 {
     "message_reference": 2,
@@ -303,7 +305,7 @@
 								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":2,\"transaction_reference\":\"80379c1db070899a916baa6adc391fe6\",\"coins\":[{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":5,\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"serial\":\"eb7188692975695e054b2542559628a8\",\"type\":\"payload\"},\"signature\":\"2be96358a5800b6bb3dfe8b161d44d3b15905a4f946780a4e36f49a1a9ff483a79df7ba994b1e4ae4959005aa1ea4a22d9ae5859f8c8a085d36d56c5dbe6929\",\"type\":\"coin\"}],\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"3552791316be494ce94fb34ed0866d38367a6a7110ca2472d10148ae1ca18d698ebedbfa6eaae41e91cdc3d5cea2ca32b73c316844ec97ef6d76289f014dd02f\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"7e275d19556b24c6b8033d2829c13636b12f22b2212c951588af609335bf100d4db9969a2304a6ffbb7b7903b4c65cda5751a8cbacc3a98d0a38c765823520f4\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"8d4d4106627f863ebde07b2a14019b6509ec391d64a1355f7e349c4527d84363371b7f76a2d32c0b8a2072c899b792c861665592e190514af605f4bdf23ffb54\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"}],\"type\":\"request renewal\"}" http://localhost:8080/gulden/message-api</code></td>
 							</tr>
 							<tr>
-								<td><a href="">Request Invalidation</a></td>
+								<td>Request Invalidation</td>
 								<td><code>{
     "message_reference": 3,
     "authorization_info": "my account",
