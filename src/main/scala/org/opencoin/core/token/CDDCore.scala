@@ -2,7 +2,6 @@ package org.opencoin.core.token
 
 import java.net.URL
 import java.util.Date
-import org.opencoin.core.util.Base64
 import org.opencoin.issuer.FlatCDD
 import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
@@ -45,7 +44,7 @@ case class CDDCore(
 	
   def canonical = BencodeEncoder.encode(CDDCore.this)
 
-  def getFlatCDD(latest: Boolean, signature: Base64): FlatCDD = {
+  def getFlatCDD(latest: Boolean, signature: BigInt): FlatCDD = {
 	FlatCDD(
 		latest,
 		CDDCore.this.protocol_version, 

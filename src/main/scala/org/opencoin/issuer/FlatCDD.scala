@@ -2,7 +2,6 @@ package org.opencoin.issuer
 
 import java.util.Date
 import java.net.URL
-import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDDCore
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.PublicRSAKey
@@ -22,9 +21,9 @@ case class FlatCDD (
     protocol_version: URL,
     cdd_location: URL,
     issuer_cipher_suite: String,
-    issuer_key_modulus: Base64,
+    issuer_key_modulus: BigInt,
 //	issuer_key_private_exponent: Base64,
-	issuer_key_public_exponent: Base64,
+	issuer_key_public_exponent: BigInt,
     cdd_serial: Int,
     cdd_signing_date: Date,
     cdd_expiry_date: Date,
@@ -40,7 +39,7 @@ case class FlatCDD (
     invalidation_service_url: List[URL],
     denominations: List[Int],
     additional_info: String, //This field can be empty.
-	signature: Base64) {
+	signature: BigInt) {
 
 	def getCDDCore: CDDCore = CDDCore(
 		"cdd", 

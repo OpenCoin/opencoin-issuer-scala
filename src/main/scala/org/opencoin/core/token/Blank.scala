@@ -1,20 +1,19 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import java.net.URL
 
 case class Blank (
-    `type`: String = "token",
+    `type`: String = "payload",
     protocol_version: URL, 
-    issuer_id: Base64, 
+    issuer_id: BigInt, 
     cdd_location: URL,
     denomination: Int,
-    mint_key_id: Base64,
-    serial: Base64) {
+    mint_key_id: BigInt,
+    serial: BigInt) {
 	
-  require(`type` == "token")
+  require(`type` == "payload")
   require(protocol_version != null)
   require(issuer_id != null)
   require(cdd_location != null)

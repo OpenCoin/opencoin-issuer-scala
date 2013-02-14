@@ -1,8 +1,10 @@
 package org.opencoin.core.util.CustomJson
 
-import org.opencoin.core.util.Base64
-import org.opencoin.core.util.Base64Serializer
-import org.opencoin.core.util.Base64Deserializer
+import org.opencoin.core.util.BigIntSerializer
+import org.opencoin.core.util.BigIntDeserializer
+//import org.opencoin.core.util.BigHexInt
+//import org.opencoin.core.util.BigHexIntSerializer
+//import org.opencoin.core.util.BigHexIntDeserializer
 import org.codehaus.jackson.map.module.SimpleModule
 import org.codehaus.jackson.Version
 import org.codehaus.jackson.map.SerializationConfig
@@ -12,8 +14,10 @@ import org.codehaus.jackson.map.ObjectMapper
 
 object CustomJson extends com.codahale.jerkson.Json {
   val module = new SimpleModule("CustomJson", Version.unknownVersion())
-  module.addSerializer(classOf[Base64], new Base64Serializer)
-  module.addDeserializer(classOf[Base64], new Base64Deserializer)
+//  module.addSerializer(classOf[BigInt], new BigHexIntSerializer)
+//  module.addDeserializer(classOf[BigInt], new BigHexIntDeserializer)
+  module.addSerializer(classOf[BigInt], new BigIntSerializer)
+  module.addDeserializer(classOf[BigInt], new BigIntDeserializer)
   mapper.registerModule(module)
   
   //Define the appropriate date format:

@@ -1,14 +1,13 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.util.Base64
 import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 
 case class Blind(
     `type`: String = "blinded payload hash",
     reference: Int,
-    blinded_payload_hash: Base64,
-    mint_key_id: Base64) {
+    blinded_payload_hash: BigInt,
+    mint_key_id: BigInt) {
 	
   require(`type` == "blinded payload hash")
   require(reference != 0)

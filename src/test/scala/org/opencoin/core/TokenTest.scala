@@ -2,7 +2,6 @@ package org.opencoin.core
 
 import java.net.URL
 import org.opencoin.core.token.{Blank, Coin}
-import org.opencoin.core.util.Base64
 import org.scalatest.FunSuite
 
 
@@ -14,6 +13,7 @@ class URLTest extends FunSuite {
 	}
 }
 
+/*
 class Base64Test extends FunSuite {
 	test("Base64 is tried to be created with empty content and illegal characters") {
 	    var thrown = intercept[Exception] {
@@ -24,49 +24,50 @@ class Base64Test extends FunSuite {
 	    	var x = new Base64("qwerty1234567890!@#$%^&*")
 	    }
 	}
-}
+} */
 
 class BlankAndCoinTest extends FunSuite {
   
     val b = Blank(
-	  `type` = "token",
+	  `type` = "payload",
       protocol_version = new URL("http://opencoin.org/OpenCoinProtocol/1.0"), 
-      issuer_id = Base64("123456"), 
+      issuer_id = BigInt("123456f", 16), 
       cdd_location = new URL("http://opencent.net/OpenCent"),
       denomination = 3,
-      mint_key_id = Base64("gft6789ohgfr56"),
-      serial = Base64("fr4567ugt67")
+      mint_key_id = BigInt("42a73c56f", 16),
+      serial = BigInt("85e5d76a", 16)
 	)
 	
     val b1 = Blank(
-	  `type` = "token",
+	  `type` = "payload",
       protocol_version = new URL("http://opencoin.org/OpenCoinProtocol/1.0"), 
-      issuer_id = Base64("123456"), 
+      issuer_id = BigInt("123456f", 16), 
       cdd_location = new URL("http://opencent.net/OpenCent"),
       denomination = 3,
-      mint_key_id = Base64("gft6789ohgfr56"),
-      serial = Base64("fr4567ugt67")
+      mint_key_id = BigInt("42a73c56f", 16),
+      serial = BigInt("85e5d76a", 16)
 	)
 	
 	val c = Coin(
 	  `type` = "coin",
-	  token = b,
-	  signature = Base64("fr5678ikjh")
+	  payload = b,
+	  signature = BigInt("8765feac876", 16)
 	)
 
+	//Identical to previous coin
 	val c1 = Coin(
 	  `type` = "coin",
-	  token = b1,
-	  signature = Base64("fr5678ikjh")
+	  payload = b1,
+	  signature = BigInt("8765feac876", 16)
 	)
 	
 	test("Coin with null and empty parameter is tried to be created") {      
 	    var thrown = intercept[Exception] {
-	    	var coin = new Coin("", c.token, c.signature)
+	    	var coin = new Coin("", c.payload, c.signature)
 	    }
 		
 	    thrown = intercept[Exception] {
-	    	var coin = new Coin(null, c.token, c.signature)
+	    	var coin = new Coin(null, c.payload, c.signature)
 	    }
 		
 	    thrown = intercept[Exception] {
@@ -74,7 +75,7 @@ class BlankAndCoinTest extends FunSuite {
 	    }
 		
 	    thrown = intercept[Exception] {
-	    	var coin = new Coin(c.`type`, c.token, null)
+	    	var coin = new Coin(c.`type`, c.payload, null)
 	    }
 	}
 	

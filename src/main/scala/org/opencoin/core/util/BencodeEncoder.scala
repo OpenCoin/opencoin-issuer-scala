@@ -36,7 +36,7 @@ object BencodeEncoder {
       case x: Int => int(x)
       case x: Long => int(x)
       case x: String => string(x)
-      case x: Base64 => string(x.toString)
+      case x: BigInt => string(x.toString(16))
       case x: BigInteger => string(x.toString)
       case x: URL => string(x.toString)
       case x: Date => string(dateFormat.format(x))

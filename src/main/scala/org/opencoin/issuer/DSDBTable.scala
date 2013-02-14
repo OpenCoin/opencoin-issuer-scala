@@ -1,13 +1,12 @@
 package org.opencoin.issuer
 
-import org.scalaquery._
-import ql._
+//import org.scalaquery._
+import org.scalaquery.ql._
 import basic.{ BasicTable => Table, _ }
 import basic.BasicDriver.Implicit._
-import session._
+import org.scalaquery.session._
 import java.util.Date
 import java.net.URL
-import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.Coin
 import org.opencoin.core.token.MintKeyCertificate
@@ -16,9 +15,9 @@ import org.scalaquery.session.Database.threadLocalSession
 
 object DSDBTable extends Table[DSDB]("DSDB") {
   
-  def serial = column[Base64]("serial", O NotNull) //TODO unique
-  def signature = column[Base64]("signature", O NotNull)
-  def mintKeyID = column[Base64]("mintKeyID", O NotNull)
+  def serial = column[BigInt]("serial", O NotNull) //TODO unique
+  def signature = column[BigInt]("signature", O NotNull)
+  def mintKeyID = column[BigInt]("mintKeyID", O NotNull)
   def date = column[Date]("date", O NotNull)
   
   def * = serial ~ signature ~ mintKeyID ~ date <> (DSDB, DSDB.unapply _)

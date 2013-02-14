@@ -8,6 +8,10 @@ import java.net.InetSocketAddress
 import org.eintr.loglady.Logging
 import org.scalaquery.session.Database
 
+/**
+ * This is the starting point which initializes and starts the issuer. You may want to see
+ * the Respond class for the actual API.
+ */
 object Issuer extends Logging{
 
   //TODO Add command line argumants. See http://github.com/scopt/scopt
@@ -16,10 +20,10 @@ object Issuer extends Logging{
 	//	if(args(0) == "--admin") Wizard
 	//}
 	//else {
-		val port = util.Properties.envOrElse("PORT", "8080").toInt // Required for Heroku deployment
+		val port = util.Properties.envOrElse("PORT", "8080").toInt // Required for deploying at Heroku
 		val db: Database = Database.forURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
 		val methods = new Methods(db)
-		val prefixPath = "gulden" // Allows to run several issuers vor different currencies along with each other each at a separate base path.
+		val prefixPath = "gulden" // Allows to run several issuers for different currencies along with each other each at a separate base path.
 
 		if (methods.init) {
 			val handleExceptions = new HandleExceptions

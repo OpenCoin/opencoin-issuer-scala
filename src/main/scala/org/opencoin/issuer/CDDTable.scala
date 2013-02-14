@@ -1,15 +1,13 @@
 package org.opencoin.issuer
 
-import org.scalaquery._
-import ql._
+//import org.scalaquery._
+import org.scalaquery.ql._
 import basic.{ BasicTable => Table, _ }
 import basic.BasicDriver.Implicit._
-import session._
+import org.scalaquery.session._
 import java.util.Date
 import java.net.URL
-import org.opencoin.core.util.Base64
 import org.opencoin.core.token.CDD
-import org.opencoin.core.token.CDDCore
 import org.opencoin.issuer.TypeMappers._
 import org.scalaquery.session.Database.threadLocalSession
 
@@ -20,8 +18,8 @@ object CDDTable extends Table[FlatCDD]("CDD") {
   def protocol_version = column[URL]("protocol_version", O NotNull)
   def cdd_location = column[URL]("cdd_location", O NotNull)
   def issuer_cipher_suite = column[String]("issuer_cipher_suite", O NotNull)
-  def issuer_key_modulus = column[Base64]("issuer_key_modulus", O NotNull)
-  def issuer_key_public_exponent = column[Base64]("issuer_key_public_exponent", O NotNull)
+  def issuer_key_modulus = column[BigInt]("issuer_key_modulus", O NotNull)
+  def issuer_key_public_exponent = column[BigInt]("issuer_key_public_exponent", O NotNull)
   def cdd_serial = column[Int]("cdd_serial", O NotNull)
   def cdd_signing_date = column[Date]("cdd_signing_date", O NotNull)
   def cdd_expiry_date = column[Date]("cdd_expiry_date", O NotNull)
@@ -37,7 +35,7 @@ object CDDTable extends Table[FlatCDD]("CDD") {
   def invalidation_service_url = column[List[URL]]("invalidation_service_url", O NotNull)
   def denominations = column[List[Int]]("denominations", O NotNull)
   def additional_info = column[String]("additional_info")
-  def signature = column[Base64]("signature", O NotNull)
+  def signature = column[BigInt]("signature", O NotNull)
   
   def * = latest ~ protocol_version ~ cdd_location ~ issuer_cipher_suite ~ issuer_key_modulus ~ issuer_key_public_exponent ~ cdd_serial ~ cdd_signing_date ~ cdd_expiry_date ~ currency_name ~ currency_divisor ~ info_service_prio ~ info_service_url ~ validation_service_prio ~ validation_service_url ~ renewal_service_prio ~ renewal_service_url ~ invalidation_service_prio ~ invalidation_service_url ~ denominations ~ additional_info ~ signature <> (FlatCDD, FlatCDD.unapply _)
   

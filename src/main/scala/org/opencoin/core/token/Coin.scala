@@ -1,12 +1,11 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.util.Base64
 import scala.collection.immutable.HashMap
 
 case class Coin(
     `type`: String = "coin", 
     payload: Blank,
-    signature: Base64) {
+    signature: BigInt) {
 	
   require(`type` == "coin")
   require(payload != null)

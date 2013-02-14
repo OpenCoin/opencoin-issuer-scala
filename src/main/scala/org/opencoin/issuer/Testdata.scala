@@ -4,7 +4,6 @@ import java.math.BigInteger
 import java.net.URL
 import java.util.Date
 import org.opencoin.core.token._
-import org.opencoin.core.util.Base64
 import org.opencoin.core.util.crypto._
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -19,7 +18,7 @@ object Testdata extends Logging {
   private val dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
   
   log.debug("Generating issuer key...")
-  val issuerKeyPair = generateKeyPair(Base64("2342"), "RSA")
+  val issuerKeyPair = generateKeyPair(2342, "RSA")
   //val issuerPublicKey = keyPair._1
   //val issuerPrivateKey = keyPair._2
   val examplePrivateIssuerKey = issuerKeyPair._2
@@ -54,11 +53,11 @@ object Testdata extends Logging {
 		cdd.denominations.map(generateFlatMintKey(_, cdd, privKey))
 	
 	def generateFlatMintKey(denom: Int, cdd: CDDCore, privKey: PrivateRSAKey): FlatMintKey = {
-		val keyPair = generateKeyPair(Base64(cdd.cdd_serial.toString), cdd.issuer_cipher_suite)
+		val keyPair = generateKeyPair(BigInt(cdd.cdd_serial), cdd.issuer_cipher_suite)
 		val publicKey = keyPair._1
 		val r = new scala.util.Random
 		
-		val mk = MintKey(
+		val mk = MintKeyCore(
 			id = hash(publicKey.canonical, "SHA-256"),
 			issuer_id = hash(cdd.issuer_public_master_key.canonical, "SHA-256"),
 			cdd_serial = r.nextInt(10000),
@@ -95,50 +94,50 @@ object Testdata extends Logging {
   ) */
   
   val blank1 = Blank (
-    `type` = "token",
+    `type` = "payload",
     protocol_version = new URL("http://opencoin.org"),
-    issuer_id = Base64("se567ujhgt78u"), 
+    issuer_id = BigInt("12345678901234567890"), 
     cdd_location = new URL("http://mycdd.com"),
     denomination = 1, // This is wrong, see the assigned issuer key's denomination
-    mint_key_id = Base64("frt678uijhab"),
-    serial = Base64("awseredrf234")
+    mint_key_id = BigInt("22222222222222"),
+    serial = 111111111
   )
   
   val coin1 = Coin(
     `type` = "coin", 
     payload = blank1,
-    signature = Base64("fr5678uhgtyy6")
+    signature = BigInt("765676567")
   )
   
   val blank2 = Blank (
-    `type` = "token",
+    `type` = "payload",
     protocol_version = new URL("http://opencoin.org"),
-    issuer_id = Base64("ji9876tgy6"), 
+    issuer_id = BigInt("12345678901234567890"), 
     cdd_location = new URL("http://mycdd.com"),
     denomination = 2,
-    mint_key_id = Base64("frt678uijhab"),
-    serial = Base64("bgygfredr35")
+    mint_key_id = BigInt("22222222222222"),
+    serial = BigInt("111111111")
   )
   
   val coin2 = Coin(
     `type` = "coin", 
     payload = blank2,
-    signature = Base64("juytfvbji8")
+    signature = BigInt("545678")
   )
   
   val blank3 = Blank (
-    `type` = "token",
+    `type` = "payload",
     protocol_version = new URL("http://opencoin.org"),
-    issuer_id = Base64("dse56ygft6y7"), 
+    issuer_id = BigInt("3456543"), 
     cdd_location = new URL("http://mycdd.com"),
     denomination = 3, // This is wrong, see the assigned issuer key's denomination
-    mint_key_id = Base64("frt678uijhab"),
-    serial = Base64("45ywuyw")
+    mint_key_id = BigInt("123456"),
+    serial = BigInt("87654")
   )
   
   val coin3 = Coin(
     `type` = "coin", 
     payload = blank3,
-    signature = Base64("we4yery")
+    signature = BigInt("76543")
   )
 }

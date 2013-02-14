@@ -10,13 +10,17 @@ import org.opencoin.issuer.Testdata._
 import org.opencoin.core.token._
 import org.opencoin.core.util.crypto
 //import org.opencoin.issuer.PrivateRSAKey
-import org.opencoin.core.util.Base64
 import org.scalaquery.session._
 import org.scalaquery.ql.extended.H2Driver.Implicit._
 import org.scalaquery.ql.basic.{BasicTable => Table}
 import org.scalaquery.ql._
 import org.scalaquery.session.Database.threadLocalSession
-   
+
+/**
+ * This is the actual application logic of the issuer. Requests come from either Respond or 
+ * Messages class. In many cases the requests are more or less passed through to the database
+ * layer (*Table classes). In other cases operations including crypto operations are performed.
+ */
 class Methods(db: Database) extends Logging {
 
   //################ Public methods: ##################
@@ -51,15 +55,15 @@ class Methods(db: Database) extends Logging {
 
   def getLatestCdd() = CDDTable.getLatestCdd(db) 
 
-  //def getOneMintKey(id: Base64) = MintKeyTable.getMintKeyCertificate(db, id)
+  //def getOneMintKey(id: Base64) = MintKeyTable.getMintKey(db, id)
 
-  def getMintKeyCertificatesById(id: List[Base64]) = id.map(MintKeyTable.getMintKeyCertificate(db, _))
+  def getMintKeysById(id: List[BigInt]) = id.map(MintKeyTable.getMintKey(db, _))
 
-  def getMintKeyCertificates(denomination: Int) = MintKeyTable.getMintKeyCertificates(db, denomination)
+  def getMintKeys(denomination: Int) = MintKeyTable.getMintKeys(db, denomination)
 
-  def getMintKeyCertificates(denomination: List[Int]) = denomination.flatMap(MintKeyTable.getMintKeyCertificates(db, _))
+  def getMintKeys(denomination: List[Int]) = denomination.flatMap(MintKeyTable.getMintKeys(db, _))
 
-  def getAllMintKeyCertificates = MintKeyTable.getAllMintKeyCertificates(db)
+  def getAllMintKeys = MintKeyTable.getAllMintKeys(db)
 
   def validate(token: String, blinds: List[Blind]): Option[List[BlindSignature]] = {
     val value = blinds.map(getDenomination).sum
@@ -100,14 +104,14 @@ class Methods(db: Database) extends Logging {
   //################ Private methods: ##################
   
   private def mint(blind: Blind): BlindSignature = {
-    import com.github.tototoshi.base64.{Base64 => Tototoshi}
+    //import com.github.tototoshi.base64.{Base64 => Tototoshi}
 	val mintkey: PrivateRSAKey = PrivateKeyTable.get(db, blind.mint_key_id)
 	//val hash = crypto.hash(blind.canonical, mintkey.hashAlg) Hashing should be part of the sign method. Test it.
-	val signature: Base64 = crypto.sign(blind.canonical, mintkey, mintkey.cipher_suite)
+	val signature = crypto.sign(blind.canonical, mintkey, mintkey.cipher_suite)
 	BlindSignature("blind signature", blind.reference, signature)
   }
   
-  private def getDenomination(blind: Blind): Int = MintKeyTable.getMintKeyCertificate(db, blind.mint_key_id).mint_key.denomination
+  private def getDenomination(blind: Blind): Int = MintKeyTable.getMintKey(db, blind.mint_key_id).mint_key.denomination
 
   //TODO implement
   private def authenticate(password: String, value: Int): Boolean = {
@@ -116,10 +120,10 @@ class Methods(db: Database) extends Logging {
   }
 
   private def sumCoins(coins: List[Coin]): Int =
-	coins.map(x => MintKeyTable.getMintKeyCertificate(db, x.payload.mint_key_id).mint_key.denomination).sum
+	coins.map(x => MintKeyTable.getMintKey(db, x.payload.mint_key_id).mint_key.denomination).sum
 
   private def sumBlinds(blinds: List[Blind]): Int =
-	blinds.map(x => MintKeyTable.getMintKeyCertificate(db, x.mint_key_id).mint_key.denomination).sum
+	blinds.map(x => MintKeyTable.getMintKey(db, x.mint_key_id).mint_key.denomination).sum
   
   private def areValid(coins: List[Coin]): Boolean = coins.forall(isValid)
 
@@ -131,7 +135,7 @@ class Methods(db: Database) extends Logging {
    *   the coin's serial is not in the DSDB
   */
   private def isValid(coin: Coin): Boolean = {
-    val mintkeycert = MintKeyTable.getMintKeyCertificate(db, coin.payload.mint_key_id)
+    val mintkeycert = MintKeyTable.getMintKey(db, coin.payload.mint_key_id)
 	
 	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
     val denomination = mintkeycert.mint_key.denomination == coin.payload.denomination
@@ -161,12 +165,12 @@ class Methods(db: Database) extends Logging {
   }
   
   private def isValidSignature(coin: Coin, key: PublicRSAKey): Boolean = 
-    isValidSignature(coin.canonical.getBytes, coin.signature.decode, key)
+    isValidSignature(coin.canonical.getBytes, coin.signature.toByteArray, key)
 
-  private def isValidSignature(cert: MintKeyCertificate): Boolean = 
-    isValidSignature(cert.mint_key.canonical.getBytes, cert.signature.decode, cert.mint_key.public_mint_key)
+  private def isValidSignature(cert: MintKey): Boolean = 
+    isValidSignature(cert.mint_key.canonical.getBytes, cert.signature.toByteArray, cert.mint_key.public_mint_key)
 
-  private def isValid(cert: MintKeyCertificate): Boolean = {
+  private def isValid(cert: MintKey): Boolean = {
 	val today = new Date
 	val cddcert = CDDTable.getCdd(db, cert.mint_key.cdd_serial)
 	

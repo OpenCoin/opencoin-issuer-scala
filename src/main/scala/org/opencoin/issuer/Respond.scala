@@ -1,13 +1,12 @@
 package org.opencoin.issuer
 
 import org.opencoin.core.token.{Blind,Coin}
-import org.opencoin.core.util.Base64
-import org.opencoin.core.util.Base64Serializer
-import org.opencoin.core.util.Base64Deserializer
+import org.opencoin.core.util.BigIntSerializer
+import org.opencoin.core.util.BigIntDeserializer
 import org.opencoin.core.util.CustomJson._
-import org.opencoin.core.messages.RequestValidationREST
-import org.opencoin.core.messages.RequestRenewalREST
-import org.opencoin.core.messages.RequestInvalidationREST
+import org.opencoin.core.REST.RequestValidationREST
+import org.opencoin.core.REST.RequestRenewalREST
+import org.opencoin.core.REST.RequestInvalidationREST
 import java.util.{NoSuchElementException => NoSuchElement}
 import com.twitter.util.Future
 import com.twitter.finagle.Service
@@ -30,15 +29,16 @@ import org.codehaus.jackson.map.ObjectMapper
 
 
 /**
- * The web service itself. See welcome.txt for further information.
+ * This is the web service itself. It processes the requests, calls the Methods class and 
+ * sends the response. This class contains the REST API but also calls the Messages class
+ * for the message-based API. Open the issuer in a web browser for further information.
 **/
 class Respond(methods: Methods, prefixPath: String) extends Service[Request, Response] with Logging {
-/*
-*/
   val basePath = Root / prefixPath
   def apply(request: Request) = {
     try {
 	  request.method -> Path(request.path) match {
+	    //Serve the static explanatory webpage
 	    case GET -> Root => Future.value {
 		  val source = scala.io.Source.fromFile("static/index.html", "UTF-8")
 		  val data = source.mkString
@@ -60,19 +60,19 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 	    }
 	    case GET -> `basePath` / "mintkeys" / "denomination" / denom => Future.value {
 		  log.debug("GET -> %s/mintkeys/denomination/<denom.> has been called." format basePath)
-		  val data = CustomJson.generate(methods.getMintKeyCertificates(denom.toInt)) //Generate JSON syntax from object
+		  val data = CustomJson.generate(methods.getMintKeys(denom.toInt)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
 	    case GET -> `basePath` / "mintkeys" / "id" / id => Future.value {
 		  log.debug("GET -> %s/mintkeys/id/<id> has been called." format basePath)
-		  val data = CustomJson.generate(methods.getMintKeyCertificatesById(List(Base64(id)))) //Generate JSON syntax from object
+		  val data = CustomJson.generate(methods.getMintKeysById(List(BigInt(id)))) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
 	    case GET -> `basePath` / "mintkeys" => Future.value {
 		  log.debug("GET -> %s/mintkeys/ has been called." format basePath)
-		  val data = CustomJson.generate(methods.getAllMintKeyCertificates) //Generate JSON syntax from object
+		  val data = CustomJson.generate(methods.getAllMintKeys) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }
@@ -80,7 +80,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/validate has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[RequestValidationREST](content) //Parse JSON syntax to object
+		  val p = CustomJson.parse[RequestValidationREST](content) //Parse JSON syntax to object
 		  val data = CustomJson.generate(methods.validate(p.authorization, p.blinds)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
@@ -89,7 +89,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/renew has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[RequestRenewalREST](content) //Parse JSON syntax to object
+		  val p = CustomJson.parse[RequestRenewalREST](content) //Parse JSON syntax to object
 		  //val (coins, blind) = p partition (_.isInstanceOf[Coin]) //TODO test!
 		  val data = CustomJson.generate(methods.renew(p.coins, p.blinds)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
@@ -99,7 +99,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/invalidate has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[RequestInvalidationREST](content) //Parse JSON syntax to object
+		  val p = CustomJson.parse[RequestInvalidationREST](content) //Parse JSON syntax to object
 		  val data = CustomJson.generate(methods.invalidate(p.authorization, p.coins)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
@@ -108,7 +108,7 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("POST -> %s/resume has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val p = parse[String](content) //Parse JSON syntax to object
+		  val p = CustomJson.parse[String](content) //Parse JSON syntax to object
 		  val data = CustomJson.generate(methods.resume(p)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
@@ -120,13 +120,12 @@ class Respond(methods: Methods, prefixPath: String) extends Service[Request, Res
 		  log.debug("data: %s" format data)
 		  Responses.html(data, acceptsGzip(request))
 	    }
+	    //This is the message-based API
 	    case POST -> `basePath` / "message-api" => Future.value {
 		  log.debug("POST -> %s/message-api has been called." format basePath)
 		  val content = request.contentString
 		  log.debug("request: %s" format content)
-		  val data = Messages.process(methods, content)
-		  log.debug("Response: " + data.toString)
-		  //val data = CustomJson.generate(response) //Generate JSON syntax from object
+		  val data = CustomJson.generate(Messages.process(methods, content)) //Generate JSON syntax from object
 		  log.debug("data: %s" format data)
 		  Responses.json(data, acceptsGzip(request))
 	    }

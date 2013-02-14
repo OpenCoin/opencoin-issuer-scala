@@ -8,4 +8,4 @@ case class ResponseMinting(
     status_code: Int,
     status_description: String,
     retry_after: java.util.Date,
-    blind_signatures: List[BlindSignature])
+    blind_signatures: List[BlindSignature]) extends Response

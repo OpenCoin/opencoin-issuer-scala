@@ -11,7 +11,6 @@ import org.eintr.loglady.Logging
 import org.opencoin.core.token.CDDCore
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.PublicRSAKey
-import org.opencoin.core.util.Base64
 import org.scalaquery.session.Database
 import org.scalaquery.session._
 import org.scalaquery.session.Database.threadLocalSession
@@ -20,6 +19,11 @@ import org.scalaquery.ql.basic.{BasicTable => Table}
 import org.scalaquery.ql._
 import org.opencoin.core.util.crypto._
 
+/**
+ * This wizard is meant to be a simple tool to create test data. In most cases you may just
+ * confirm the dialog by pressing the enter key. This wizard hasn't been used for a while
+ * and is deprecated.
+ */
 object Wizard extends Logging{
 
 	println("Opencoin Issuer Wizard\n")
@@ -56,7 +60,7 @@ object Wizard extends Logging{
 	println(issuer_cipher_suite)
 	
 	println("Generating RSA-2048 keys...")
-	val keyPair = generateKeyPair(Base64(cdd_serial.toString), issuer_cipher_suite)
+	val keyPair = generateKeyPair(BigInt(cdd_serial), issuer_cipher_suite)
 	println("Public exponent: " + keyPair._1.public_exponent)
 	println("Modulus: " + keyPair._1.modulus)
 	println("Private exponent: " + keyPair._2.private_exponent)

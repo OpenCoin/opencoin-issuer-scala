@@ -7,4 +7,4 @@ case class ResponseCdd(
     message_reference: Int,
     status_code: Int,
     status_description: String,
-    cdd: CDD)
+    cdd: CDD) extends Response
