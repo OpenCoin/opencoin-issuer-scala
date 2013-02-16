@@ -18,6 +18,7 @@ object Responses extends Logging {
   	log.debug("Responses built, json, data: %s" format data)
     val response = Response()
     response.setContentTypeJson
+    response.setHeader("Access-Control-Allow-Origin", "*") //TODO Assess whether this is a risk or okay.
     if (gzip) response.setHeader(CONTENT_ENCODING, GZIP)
     response.content = content(data, gzip)
     response
