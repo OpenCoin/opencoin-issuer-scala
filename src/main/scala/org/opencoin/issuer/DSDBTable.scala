@@ -9,7 +9,7 @@ import java.util.Date
 import java.net.URL
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.Coin
-import org.opencoin.core.token.MintKeyCertificate
+import org.opencoin.core.token.MintKey
 import org.opencoin.issuer.TypeMappers._
 import org.scalaquery.session.Database.threadLocalSession
 
