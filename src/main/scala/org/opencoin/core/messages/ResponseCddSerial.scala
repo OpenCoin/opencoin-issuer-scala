@@ -5,4 +5,4 @@ case class ResponseCddSerial(
     message_reference: Int,
     status_code: Int,
     status_description: String,
-    serial: BigInt) extends Response
+    cdd_serial: Int) extends Response
