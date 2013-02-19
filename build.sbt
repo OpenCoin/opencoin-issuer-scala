@@ -8,7 +8,7 @@ seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
 // StartScriptPlugin.stage in Compile := Unit
 
-name := "Issuer"
+name := "Opencoin Issuer"
 
 version := "0.1"
 
@@ -19,7 +19,7 @@ scalaVersion  := "2.9.2"
 resolvers ++= Seq(
     "twitter.com" at "http://maven.twttr.com/",
     "repo.codahale.com" at "http://repo.codahale.com",
-	"Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots" //For Squeryl Snapshot
+	  "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots" //For Squeryl Snapshot
 )
 
 libraryDependencies ++= Seq(
@@ -49,3 +49,4 @@ libraryDependencies ++= Seq(
 scalacOptions ++= Seq("-unchecked", "-deprecation")
 
 // seq(Revolver.settings: _*)
+
