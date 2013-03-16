@@ -2,14 +2,18 @@ package org.opencoin.core.util.CustomJson
 
 import org.opencoin.core.util.BigIntSerializer
 import org.opencoin.core.util.BigIntDeserializer
+//import org.opencoin.core.util.UrlDeserializer
 import org.opencoin.core.util.DateSerializer
 import org.opencoin.core.util.TupleSerializer
-import org.codehaus.jackson.map.module.SimpleModule
-import org.codehaus.jackson.Version
-import org.codehaus.jackson.map.SerializationConfig
-import org.codehaus.jackson.map.DeserializationConfig
-import org.codehaus.jackson.map.ObjectWriter
-import org.codehaus.jackson.map.ObjectMapper
+
+import com.fasterxml.jackson.databind.module.SimpleModule
+//import com.fasterxml.jackson.databind.cfg.DatabindVersion
+import com.fasterxml.jackson.databind.SerializationConfig
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.databind.ObjectWriter
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.core.Version
+
 import java.net.URL
 import java.util.Date
 
@@ -17,6 +21,7 @@ object CustomJson extends com.codahale.jerkson.Json {
   val module = new SimpleModule("CustomJson", Version.unknownVersion())
   module.addSerializer(classOf[BigInt], new BigIntSerializer)
   module.addDeserializer(classOf[BigInt], new BigIntDeserializer)
+//  module.addDeserializer(classOf[URL], new UrlDeserializer)
   module.addSerializer(classOf[(Int,URL)], new TupleSerializer)
   module.addSerializer(classOf[Date], new DateSerializer)
   mapper.registerModule(module)

@@ -1,13 +1,13 @@
 package org.opencoin.core.util
 
-import com.codahale.jerkson.Json
-import org.codehaus.jackson.map.annotate.JsonCachable
-import org.codehaus.jackson.map.{DeserializationContext, JsonDeserializer, SerializerProvider, JsonSerializer}
-import org.codehaus.jackson.{Version, JsonParser, JsonGenerator}
+import com.fasterxml.jackson.databind.JsonSerializer
+import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.core.JsonGenerator
 
 /**
  * This file has been copied from https://github.com/josephw/jerkson/blob/ba6753d7a39b3046639d963ae9a9ebdc6e261635/src/main/scala/com/codahale/jerkson/ser/TupleSerializer.scala
  */
+
 class TupleSerializer extends JsonSerializer[Product] {
   def serialize(value: Product, json: JsonGenerator, provider: SerializerProvider) {
     json.writeStartArray()
@@ -19,7 +19,7 @@ class TupleSerializer extends JsonSerializer[Product] {
 }
 
 object TupleSerializer {
-  val allTupleClasses: List[Class[_]] = List(
+  val allTupleClasses: List[Class[_ <: Product]] = List(
       classOf[Tuple1[_]],
       classOf[Tuple2[_,_]],
       classOf[Tuple3[_,_,_]],
@@ -45,3 +45,4 @@ object TupleSerializer {
 //      classOf[Tuple23[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_]],
   )
 }
+

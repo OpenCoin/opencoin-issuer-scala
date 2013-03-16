@@ -43,7 +43,7 @@ object Testdata extends Logging {
 	  additional_info = "This CDD is for testing purposes only.")
 	  //signature = Base64("FIumYIFs07MBZGQ+DsmJLnUGVydDMPqe9yWAxIhNQ5Tc+uePqHa/d5ns6XALWoVd3ol3bsQCXCkRVOsYk3PYGVo+VQGQAZ4CyrlKPEiHHXHrDYVVtO+UOegy7lQlaQ3dec7TfC8UKS0dfXKju/RioXoF2tOHUDwldxQnph93JBLJxRt1AJacBmwZwiHV/fxplZI471vlRgEHZmJwUDHWUo1ODbOgZ5aZY4cMqzlFr6hBFP44CKmiBo+jgdQj4sTYswgqN7WjDmquBH30U0r+O4vD3vkyR6JLQwkz3qvy7iHCWBmy0dNrtyXdhgGYQ1afUH/+1ltbOV3ekG6rid9xhg=="))
 	
-	private val cddSignature = sign(exampleCDD.canonical, examplePrivateIssuerKey, "SHA256withRSA")
+	private val cddSignature = sign(exampleCDD.getBencode, examplePrivateIssuerKey, "SHA256withRSA")
 	val exampleFlatCDD: FlatCDD = exampleCDD.getFlatCDD(true, cddSignature)
 	
         log.debug("Generating mint keys...")
@@ -58,8 +58,8 @@ object Testdata extends Logging {
 		val r = new scala.util.Random
 		
 		val mk = MintKeyCore(
-			id = hash(publicKey.canonical, "SHA-256"),
-			issuer_id = hash(cdd.issuer_public_master_key.canonical, "SHA-256"),
+			id = hash(publicKey.getBencode, "SHA-256"),
+			issuer_id = hash(cdd.issuer_public_master_key.getBencode, "SHA-256"),
 			cdd_serial = r.nextInt(10000),
 			public_mint_key = publicKey,
 			denomination = denom,
@@ -68,7 +68,7 @@ object Testdata extends Logging {
 			coins_expiry_date = dateFormat.parse("2015-12-31T12:00:00Z")
 		)
 		
-		val mintSignature = sign(mk.canonical, examplePrivateIssuerKey, "SHA256withRSA")	
+		val mintSignature = sign(mk.getBencode, examplePrivateIssuerKey, "SHA256withRSA")	
 		mk.getFlatMintKey(mintSignature)
 	}
 	

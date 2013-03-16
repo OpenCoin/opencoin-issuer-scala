@@ -20,13 +20,20 @@ import org.jboss.netty.handler.codec.http.HttpHeaders.Values._
 import com.codahale.jerkson.Json._
 import org.eintr.loglady.Logging
 
-import org.codehaus.jackson.map.module.SimpleModule
+/*import org.codehaus.jackson.map.module.SimpleModule
 import org.codehaus.jackson.Version
 import org.codehaus.jackson.map.SerializationConfig
 import org.codehaus.jackson.map.DeserializationConfig
 import org.codehaus.jackson.map.ObjectWriter
 import org.codehaus.jackson.map.ObjectMapper
+*/
 
+import com.fasterxml.jackson.databind.module.SimpleModule
+//import com.fasterxml.jackson.databind.cfg.DatabindVersion
+import com.fasterxml.jackson.databind.SerializationConfig
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.databind.ObjectWriter
+import com.fasterxml.jackson.databind.ObjectMapper
 
 /**
  * This is the web service itself. It processes the requests, calls the Methods class and 

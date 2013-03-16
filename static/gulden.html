@@ -37,7 +37,7 @@
 		<div class="ym-hlist">
 			<ul>
 				<li><a href="/">Overview</a></li>
-				<li><a href="http://okfnpad.org/opencoin-v3">Specification Draft</a></li>
+				<li><a href="https://github.com/OpenCoin/opencoin-memoranda/blob/master/opencoin-v3.txt">Specification Draft</a></li>
 				<li class="active"><strong>Currency: Gulden</strong></li>
 			</ul>
 		</div>
@@ -49,306 +49,300 @@
 			<section class="ym-grid linearize-level-1">
 				<article class="ym-g66 ym-gl content">
 					<div class="ym-gbox-left ym-clearfix">
-						<p>Two alternative APIs are available, a REST-like and a message-oriented API.
-						<h2>REST-like API</h2>
-						<table>
-							<tr>
-								<th>Request Type</th>
-								<th>URL</th>
-								<th>Content</th>
-								<th>Description</th>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td><a href="cdds/latest">cdds/latest</a></td>
-								<td></td>
-								<td>Returns current/latest CDD</td>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td><a href="cdds/serial/2342">cdds/serial/&lt;SERIAL&gt;</a></td>
-								<td></td>
-								<td>Returns a particular CDD which matches the serial</td>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td><a href="mintkeys/">mintkeys/</a></td>
-								<td></td>
-								<td>Returns all mintkeys which are valid at the time of request</td>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td><a href="mintkeys/id/<ID>">mintkeys/id/&lt;ID&gt;</a></td>
-								<td></td>
-								<td>Returns a particular mintkey which matches the id</td>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td><a href="mintkeys/denomination/2">mintkeys/denomination/&lt;DENOMINATION&gt;</a></td>
-								<td></td>
-								<td>Returns the mintkeys for the particular denomination</td>
-							</tr>
-							<tr>
-								<td>POST</td>
-								<td><a href="validation">validation</a></td>
-								<td><code>
+						<p>Two alternative APIs are available, a RESTful and a message-oriented API.
+						<h2>RESTful API</h2>
+						<table class="bordertable">
+							<thead>
+								<tr>
+									<th>Request Type</th>
+									<th>Request URL</th>
+									<th>Request POST Content</th>
+									<th>Response</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>GET</td>
+									<td><a href="cdds/latest">cdds/latest</a></td>
+									<td><i>empty</i></td>
+									<td>Returns current/latest CDD</td>
+								</tr>
+								<tr>
+									<td>GET</td>
+									<td><a href="cdds/serial/2342">cdds/serial/<mark><i>{serial}</i></mark></a></td>
+									<td><i>empty</i></td>
+									<td>Returns a particular CDD which matches the serial</td>
+								</tr>
+								<tr>
+									<td>GET</td>
+									<td><a href="mintkeys/">mintkeys/</a></td>
+									<td><i>empty</i></td>
+									<td>Returns all mintkeys which are valid at the time of request</td>
+								</tr>
+								<tr>
+									<td>GET</td>
+									<td><a href="mintkeys/id/<ID>">mintkeys/id/<mark><i>{id}</i></mark></a></td>
+									<td><i>empty</i></td>
+									<td>Returns a particular mintkey which matches the id</td>
+								</tr>
+								<tr>
+									<td>GET</td>
+									<td><a href="mintkeys/denomination/2">mintkeys/denomination/<mark><i>{denomination}</i></mark></a></td>
+									<td><i>empty</i></td>
+									<td>Returns the mintkeys for the particular denomination</td>
+								</tr>
+								<tr>
+									<td>POST</td>
+									<td><a href="validation">validation</a></td>
+									<td><pre>
 {
-    reference: crypto_random_number,
-    authorization: string,
-    tokens: [n blinds]
+	"reference": crypto_random_number,
+	"authorization": string,
+	"blinds": [n blinds]
 } 
-								</code></td>
-								<td>Issues coins (precisely: blind signatures) when password "opencoin" is provided. The response is a JSON-formated list of BlindSignatures.</td>
-							</tr>
-							<tr>
-								<td>POST</td>
-								<td><a href="renewal">renewal</a></td>
-								<td><code>
+									</pre></td>
+									<td>Issues coins (precisely: blind signatures) when password "opencoin" is provided. The response is a JSON-formated list of BlindSignatures.</td>
+								</tr>
+								<tr>
+									<td>POST</td>
+									<td><a href="renewal">renewal</a></td>
+									<td><pre>
 {
-    reference: crypto_random_number,
-    coins: [n coins],
-    tokens: [n blinds]
+	"reference": crypto_random_number,
+	"coins": [n coins],
+	"blinds": [n blinds]
 } 
-								</code></td>
-								<td>Renews coins (precisely: provides blind signatures) when blanks of equal value are provided. The response is a JSON-formated list of BlindSignatures.</td>
-							</tr>
-							<tr>
-								<td>POST</td>
-								<td><a href="invalidation">invalidation</a></td>
-								<td><code>
+									</pre></td>
+									<td>Renews coins (precisely: provides blind signatures) when blanks of equal value are provided. The response is a JSON-formated list of BlindSignatures.</td>
+								</tr>
+								<tr>
+									<td>POST</td>
+									<td><a href="invalidation">invalidation</a></td>
+									<td><pre>
 {
-    authorization: string,
-    coins: [n coins]
+	"authorization": string,
+	"coins": [n coins]
 } 
-								</code></td>
-								<td>Invalidates coins and credit their value to a not-implemented account. The response should return a HTTP error code.</td>
-							</tr>
-							<tr>
-								<td>GET</td>
-								<td>resume</td>
-								<td></td>
-								<td>Allows to receive coins after a validation or renewal request during which the connection has been lost. Not yet implemented.</td>
-							</tr>
+									</pre></td>
+									<td>Invalidates coins and credit their value to a not-implemented account. The response should return a HTTP error code.</td>
+								</tr>
+								<tr>
+									<td>GET</td>
+									<td>resume</td>
+									<td></td>
+									<td>Allows to receive coins after a validation or renewal request during which the connection has been lost. Not implemented yet.</td>
+								</tr>
+							</tbody>
 						</table>
 						<p>Not sure if an additional interface is required to list all available CDDs and mintkeys.
 						<h2>Message-Oriented API</h2>
-						<p>Alternatively to the REST-like API above, you may want to use the following message-oriented API instead. This one is compliant to the opencoin specification. The URL <a href="message-api">message-api</a> is accessed with HTTP POST.
-						<table>
-							<tr>
-								<th>Message Type</th>
-								<th>Content in POST body</th>
-								<th>cURL</th>
-							</tr>
-							<tr>
-								<td><a href="http://www.hurl.it/hurls/57d371e095abf9f8472e30184a8d2c83b0e2fa9a/82c5a36407aa6e0ce0faa449623c5c880de0835e">Request CDD serial (Get latest CDD's serial)</a></td>
-								<td><code>{
-							    "message_reference": 10,
-							    "type": "request cdd serial"
-									}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd serial\",\"message_reference\":10}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td><a href="http://www.hurl.it/hurls/54b008a20a17d7206cc090db060f0108be11f455/ea03a215531794f4c34bfbb1f5b6954f0de63aa0">Request CDD</a></td>
-								<td><code>{
-							    "message_reference": 10,
-							    "cdd_serial": 2342,
-							    "type": "request cdd"
-									}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd\",\"message_reference\":10,\"cdd_serial\":2342}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td><a href="http://www.hurl.it/hurls/e1ea04393b6009a2e785a1d32346a74dd91bfc75/4700ef630dc3cbe670f3fe818f15243097832187">Request mint keys by ID</a> <b>(The ID has to be updated!)</b></td>
-								<td><code>{
+						<p>Alternatively to the RESTful API above, you may want to use the following message-oriented API instead which is more complex but compliant to the opencoin specification.<br>
+						<p><b>URI:</b> <a href="message-api">message-api</a><br>
+						<p><b>HTTP Method:</b> POST<br>
+						<p><b>Resource Format:</b> application/json<br>
+
+						<h3>Request CDD serial</h3>
+						<p>Get the latest CDD's serial number. The actual CDD may be requested subsequently.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
+	"message_reference": 10,
+	"type": "request cdd serial"
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd serial\",\"message_reference\":10}" http://localhost:8080/gulden/message-api</pre>
+						<p><a href="http://www.hurl.it/hurls/57d371e095abf9f8472e30184a8d2c83b0e2fa9a/82c5a36407aa6e0ce0faa449623c5c880de0835e">Test with HURL</a>
+						<h4>Responses</h4> TBD
+						
+						<h3>Request CDD</h3>
+						<p>Get the CDD for a given CDD serial number.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
+	"message_reference": 10,
+	"cdd_serial": 2342,
+	"type": "request cdd"
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"type\":\"request cdd\",\"message_reference\":10,\"cdd_serial\":2342}" http://localhost:8080/gulden/message-api</pre>
+						<p><a href="http://www.hurl.it/hurls/54b008a20a17d7206cc090db060f0108be11f455/ea03a215531794f4c34bfbb1f5b6954f0de63aa0">Test with HURL</a>
+						<h4>Responses</h4> TBD
+						
+						<h3>Request Mint Keys</h3>
+						<p>Get mint keys for given IDs or denominations. If neither an ID nor denomination is provided, all mint keys are returned.
+						<h4>HTTP POST Content With Given IDs</h4>
+<pre class="box info">{
     "message_reference": 2,
     "mint_key_ids": [
         "29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7"
     ],
     "denominations": [],
     "type": "request mint keys"
-									}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\": 2,\"mint_key_ids\": [\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\"],\"denominations\": [],\"type\": \"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td><a href="http://www.hurl.it/hurls/89b36647d0be8c64ef2601c6b931d53be23f74c5/2a0a0754566b8a98f31cf8ad625128cc82f72d71">Request mint keys by denomination</a></td>
-								<td><code>{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\": 2,\"mint_key_ids\": [\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\"],\"denominations\": [],\"type\": \"request mint keys\"}" http://localhost:8080/gulden/message-api</pre>
+						<p><a href="http://www.hurl.it/hurls/e1ea04393b6009a2e785a1d32346a74dd91bfc75/4700ef630dc3cbe670f3fe818f15243097832187">Test with HURL</a>. The ID has to be updated!
+						<h4>HTTP POST Content With Given Denominations</h4>
+<pre class="box info">{
     "message_reference": 3,
     "mint_key_ids": [],
     "denominations": [1,2,5,10],
     "type": "request mint keys"
-									}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[1,2,5,10],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td><a href="http://www.hurl.it/hurls/afcb36e801153c69a19bc9c2979224e6f2e33fc6/8d204c3625d4b4dcff35686fc879aac5837b54a3">Request all mint keys (without parameter)</a></td>
-								<td><code>{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[1,2,5,10],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</pre>
+						<p><a href="http://www.hurl.it/hurls/89b36647d0be8c64ef2601c6b931d53be23f74c5/2a0a0754566b8a98f31cf8ad625128cc82f72d71">Test with HURL</a>.
+						<h4>HTTP POST Content To Request All Mint Keys</h4>
+<pre class="box info">{
     "message_reference": 3,
     "mint_key_ids": [],
     "denominations": [],
     "type": "request mint keys"
-									}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td>Request Validation</td>
-								<td><code>{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"mint_key_ids\":[],\"denominations\":[],\"type\":\"request mint keys\"}" http://localhost:8080/gulden/message-api</pre>
+						<p><a href="http://www.hurl.it/hurls/afcb36e801153c69a19bc9c2979224e6f2e33fc6/8d204c3625d4b4dcff35686fc879aac5837b54a3">Test with HURL</a>.						<h4>Responses</h4> TBD
+
+						<h3>Request Validation</h3>
+						<p>Validate blinds.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
     "message_reference": 5,
     "transaction_reference": "b0341c1f512c215f54a0c84017d02a25",
     "authorization_info": "password",
     "blinds": [
         {
             "reference": "r_0",
-            "blinded_payload_hash":
-"79a555e7758409f23299e715e6ae998fc0a129ddc150f8a312621b27e965816b9bb198e423d0a7b36340f54814a1372ee272535a55de72c298a502efb74ee7ff",
-            "mint_key_id":
-"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
+            "blinded_payload_hash": "79a555e7758409f23299e715e6ae998fc0a129ddc150f8a312621b27e965816b9bb198e423d0a7b36340f54814a1372ee272535a55de72c298a502efb74ee7ff",
+            "mint_key_id": "29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
             "type": "blinded payload hash"
         },
         {
             "reference": "r_1",
-            "blinded_payload_hash":
-"50e630140f21a86b0f95962c50d430ce740bbf8896843c581697dc4aa7575edfc66c29661a1e75f2aca1f1806e947a13fffd9a32dba7383c7472eaba7cb68091",
-            "mint_key_id":
-"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
+            "blinded_payload_hash": "50e630140f21a86b0f95962c50d430ce740bbf8896843c581697dc4aa7575edfc66c29661a1e75f2aca1f1806e947a13fffd9a32dba7383c7472eaba7cb68091",
+            "mint_key_id": "b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
             "type": "blinded payload hash"
         },
         {
             "reference": "r_2",
-            "blinded_payload_hash":
-"6a0e8f7562abfd4318965abdaa3b606cddbc25ddb3ce9cfffc53045c6bd5af31e2a0d3df3d2da75f3caf4bcceb5a52978fc261e7576c0b60d66b6bac273e0860",
-            "mint_key_id":
-"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
+            "blinded_payload_hash": "6a0e8f7562abfd4318965abdaa3b606cddbc25ddb3ce9cfffc53045c6bd5af31e2a0d3df3d2da75f3caf4bcceb5a52978fc261e7576c0b60d66b6bac273e0860",
+            "mint_key_id": "b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
             "type": "blinded payload hash"
         },
         {
             "reference": "r_3",
-            "blinded_payload_hash":
-"1ad3d379f29d83971be7b010ad899189616af99acd8280d81a37b09b5c6bfef28903696f79046345064b12238b940478658e48477d49e39f0e1ba0c9740ed98d",
-            "mint_key_id":
-"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83",
+            "blinded_payload_hash": "1ad3d379f29d83971be7b010ad899189616af99acd8280d81a37b09b5c6bfef28903696f79046345064b12238b940478658e48477d49e39f0e1ba0c9740ed98d",
+            "mint_key_id": "6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83",
             "type": "blinded payload hash"
         }
     ],
     "type": "request validation"
-}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":5,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"authorization_info\":\"password\",\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"79a555e7758409f23299e715e6ae998fc0a129ddc150f8a312621b27e965816b9bb198e423d0a7b36340f54814a1372ee272535a55de72c298a502efb74ee7ff\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"50e630140f21a86b0f95962c50d430ce740bbf8896843c581697dc4aa7575edfc66c29661a1e75f2aca1f1806e947a13fffd9a32dba7383c7472eaba7cb68091\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"6a0e8f7562abfd4318965abdaa3b606cddbc25ddb3ce9cfffc53045c6bd5af31e2a0d3df3d2da75f3caf4bcceb5a52978fc261e7576c0b60d66b6bac273e0860\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_3\",\"blinded_payload_hash\":\"1ad3d379f29d83971be7b010ad899189616af99acd8280d81a37b09b5c6bfef28903696f79046345064b12238b940478658e48477d49e39f0e1ba0c9740ed98d\",\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"type\":\"blinded payload hash\"}],\"type\":\"request validation\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td>Request Resume</td>
-								<td><code>
-{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":5,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"authorization_info\":\"password\",\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"79a555e7758409f23299e715e6ae998fc0a129ddc150f8a312621b27e965816b9bb198e423d0a7b36340f54814a1372ee272535a55de72c298a502efb74ee7ff\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"50e630140f21a86b0f95962c50d430ce740bbf8896843c581697dc4aa7575edfc66c29661a1e75f2aca1f1806e947a13fffd9a32dba7383c7472eaba7cb68091\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"6a0e8f7562abfd4318965abdaa3b606cddbc25ddb3ce9cfffc53045c6bd5af31e2a0d3df3d2da75f3caf4bcceb5a52978fc261e7576c0b60d66b6bac273e0860\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_3\",\"blinded_payload_hash\":\"1ad3d379f29d83971be7b010ad899189616af99acd8280d81a37b09b5c6bfef28903696f79046345064b12238b940478658e48477d49e39f0e1ba0c9740ed98d\",\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"type\":\"blinded payload hash\"}],\"type\":\"request validation\"}" http://localhost:8080/gulden/message-api</pre>
+						<p>Test with HURL: TBD
+						<h4>Responses</h4> TBD
+						
+						<h3>Request Resume</h3>
+						<p>Resume a Validation or Renewal command after a broken connection or if issuer requires long time.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
     "message_reference": 6,
     "transaction_reference": "b0341c1f512c215f54a0c84017d02a25",
     "type": "request resume"
-}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":6,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"type\":\"request resume\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td>Request Renewal</td>
-								<td><code>
-{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":6,\"transaction_reference\":\"b0341c1f512c215f54a0c84017d02a25\",\"type\":\"request resume\"}" http://localhost:8080/gulden/message-api</pre>
+						<p>Test with HURL: TBD
+						<h4>Responses</h4> TBD
+
+						<h3>Request Renewal</h3>
+						<p>Refresh coins for given blinds.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
     "message_reference": 2,
     "transaction_reference": "80379c1db070899a916baa6adc391fe6",
     "coins": [
         {
             "payload": {
                 "protocol_version": "http://opencoin.org/1.0",
-                "issuer_id":
-"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
+                "issuer_id": "1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
                 "cdd_location": "http://opencent.org",
                 "denomination": 5,
-                "mint_key_id":
-"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83",
+                "mint_key_id": "6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83",
                 "serial": "eb7188692975695e054b2542559628a8",
                 "type": "payload"
             },
-            "signature":
-"2be96358a5800b6bb3dfe8b161d44d3b15905a4f946780a4e36f49a1a9ff483a79df7ba994b1e4ae4959005aa1ea4a22d9ae5859f8c8a085d36d56c5dbe6929",
+            "signature": "2be96358a5800b6bb3dfe8b161d44d3b15905a4f946780a4e36f49a1a9ff483a79df7ba994b1e4ae4959005aa1ea4a22d9ae5859f8c8a085d36d56c5dbe6929",
             "type": "coin"
         }
     ],
     "blinds": [
         {
             "reference": "r_0",
-            "blinded_payload_hash":
-"3552791316be494ce94fb34ed0866d38367a6a7110ca2472d10148ae1ca18d698ebedbfa6eaae41e91cdc3d5cea2ca32b73c316844ec97ef6d76289f014dd02f",
-            "mint_key_id":
-"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
+            "blinded_payload_hash": "3552791316be494ce94fb34ed0866d38367a6a7110ca2472d10148ae1ca18d698ebedbfa6eaae41e91cdc3d5cea2ca32b73c316844ec97ef6d76289f014dd02f",
+            "mint_key_id": "b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
             "type": "blinded payload hash"
         },
         {
             "reference": "r_1",
-            "blinded_payload_hash":
-"7e275d19556b24c6b8033d2829c13636b12f22b2212c951588af609335bf100d4db9969a2304a6ffbb7b7903b4c65cda5751a8cbacc3a98d0a38c765823520f4",
-            "mint_key_id":
-"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
+            "blinded_payload_hash": "7e275d19556b24c6b8033d2829c13636b12f22b2212c951588af609335bf100d4db9969a2304a6ffbb7b7903b4c65cda5751a8cbacc3a98d0a38c765823520f4",
+            "mint_key_id": "b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
             "type": "blinded payload hash"
         },
         {
             "reference": "r_2",
-            "blinded_payload_hash":
-"8d4d4106627f863ebde07b2a14019b6509ec391d64a1355f7e349c4527d84363371b7f76a2d32c0b8a2072c899b792c861665592e190514af605f4bdf23ffb54",
-            "mint_key_id":
-"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
+            "blinded_payload_hash": "8d4d4106627f863ebde07b2a14019b6509ec391d64a1355f7e349c4527d84363371b7f76a2d32c0b8a2072c899b792c861665592e190514af605f4bdf23ffb54",
+            "mint_key_id": "29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
             "type": "blinded payload hash"
         }
     ],
     "type": "request renewal"
-}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":2,\"transaction_reference\":\"80379c1db070899a916baa6adc391fe6\",\"coins\":[{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":5,\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"serial\":\"eb7188692975695e054b2542559628a8\",\"type\":\"payload\"},\"signature\":\"2be96358a5800b6bb3dfe8b161d44d3b15905a4f946780a4e36f49a1a9ff483a79df7ba994b1e4ae4959005aa1ea4a22d9ae5859f8c8a085d36d56c5dbe6929\",\"type\":\"coin\"}],\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"3552791316be494ce94fb34ed0866d38367a6a7110ca2472d10148ae1ca18d698ebedbfa6eaae41e91cdc3d5cea2ca32b73c316844ec97ef6d76289f014dd02f\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"7e275d19556b24c6b8033d2829c13636b12f22b2212c951588af609335bf100d4db9969a2304a6ffbb7b7903b4c65cda5751a8cbacc3a98d0a38c765823520f4\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"8d4d4106627f863ebde07b2a14019b6509ec391d64a1355f7e349c4527d84363371b7f76a2d32c0b8a2072c899b792c861665592e190514af605f4bdf23ffb54\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"}],\"type\":\"request renewal\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-							<tr>
-								<td>Request Invalidation</td>
-								<td><code>{
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":2,\"transaction_reference\":\"80379c1db070899a916baa6adc391fe6\",\"coins\":[{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":5,\"mint_key_id\":\"6ce18749ca2194501c6d3f3d3f7229fa211e9a58202917a61fd067748bf2da83\",\"serial\":\"eb7188692975695e054b2542559628a8\",\"type\":\"payload\"},\"signature\":\"2be96358a5800b6bb3dfe8b161d44d3b15905a4f946780a4e36f49a1a9ff483a79df7ba994b1e4ae4959005aa1ea4a22d9ae5859f8c8a085d36d56c5dbe6929\",\"type\":\"coin\"}],\"blinds\":[{\"reference\":\"r_0\",\"blinded_payload_hash\":\"3552791316be494ce94fb34ed0866d38367a6a7110ca2472d10148ae1ca18d698ebedbfa6eaae41e91cdc3d5cea2ca32b73c316844ec97ef6d76289f014dd02f\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_1\",\"blinded_payload_hash\":\"7e275d19556b24c6b8033d2829c13636b12f22b2212c951588af609335bf100d4db9969a2304a6ffbb7b7903b4c65cda5751a8cbacc3a98d0a38c765823520f4\",\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"type\":\"blinded payload hash\"},{\"reference\":\"r_2\",\"blinded_payload_hash\":\"8d4d4106627f863ebde07b2a14019b6509ec391d64a1355f7e349c4527d84363371b7f76a2d32c0b8a2072c899b792c861665592e190514af605f4bdf23ffb54\",\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"type\":\"blinded payload hash\"}],\"type\":\"request renewal\"}" http://localhost:8080/gulden/message-api</pre>
+						<p>Test with HURL: TBD
+						<h4>Responses</h4> TBD
+
+						<h3>Request Invalidation</h3>
+						<p>Invalidate valid coins and credit to user's bank account.
+						<h4>HTTP POST Content</h4>
+<pre class="box info">{
     "message_reference": 3,
     "authorization_info": "my account",
     "coins": [
         {
             "payload": {
                 "protocol_version": "http://opencoin.org/1.0",
-                "issuer_id":
-"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
+                "issuer_id": "1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
                 "cdd_location": "http://opencent.org",
                 "denomination": 2,
-                "mint_key_id":
-"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
+                "mint_key_id": "b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7",
                 "serial": "9b51c01df81263d286ef8321c415ac07",
                 "type": "payload"
             },
-            "signature":
-"5c3ebc6d8c4b47185a87a4f86701b3171cbf37502c5de8c71ea9abd22db083d29c4667ea3ccd0c7a346786e31a3f1d45fb431b0cd67f0b8a5636d6e30876d9c5",
+            "signature": "5c3ebc6d8c4b47185a87a4f86701b3171cbf37502c5de8c71ea9abd22db083d29c4667ea3ccd0c7a346786e31a3f1d45fb431b0cd67f0b8a5636d6e30876d9c5",
             "type": "coin"
         },
         {
             "payload": {
                 "protocol_version": "http://opencoin.org/1.0",
-                "issuer_id":
-"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
+                "issuer_id": "1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92",
                 "cdd_location": "http://opencent.org",
                 "denomination": 1,
-                "mint_key_id":
-"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
+                "mint_key_id": "29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7",
                 "serial": "9a3b32d125fec1a6f6428ebc84c517cb",
                 "type": "payload"
             },
-            "signature":
-"4787978825a66c19c22fa87784b9b28a186afbf72bc9c7fdaf0a10f189c61cd902dc31e9f5f9b84ff11cc68c00060920134602cd002f67bb0a9c381b6fc0583b",
+            "signature": "4787978825a66c19c22fa87784b9b28a186afbf72bc9c7fdaf0a10f189c61cd902dc31e9f5f9b84ff11cc68c00060920134602cd002f67bb0a9c381b6fc0583b",
             "type": "coin"
         }
     ],
     "type": "request invalidation"
-}</code>
-								</td>
-								<td><code>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"authorization_info\":\"my account\",\"coins\":[{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":2,\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"serial\":\"9b51c01df81263d286ef8321c415ac07\",\"type\":\"payload\"},\"signature\":\"5c3ebc6d8c4b47185a87a4f86701b3171cbf37502c5de8c71ea9abd22db083d29c4667ea3ccd0c7a346786e31a3f1d45fb431b0cd67f0b8a5636d6e30876d9c5\",\"type\":\"coin\"},{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":1,\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"serial\":\"9a3b32d125fec1a6f6428ebc84c517cb\",\"type\":\"payload\"},\"signature\":\"4787978825a66c19c22fa87784b9b28a186afbf72bc9c7fdaf0a10f189c61cd902dc31e9f5f9b84ff11cc68c00060920134602cd002f67bb0a9c381b6fc0583b\",\"type\":\"coin\"}],\"type\":\"request invalidation\"}" http://localhost:8080/gulden/message-api</code></td>
-							</tr>
-						</table>
+}</pre>
+						<h4>cURL</h4>
+						<pre>curl -H "Content-Type: application/json" -X POST -d "{\"message_reference\":3,\"authorization_info\":\"my account\",\"coins\":[{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":2,\"mint_key_id\":\"b16e28a98425963b84de4967b5efbad583fc428b70dffd8e3cc54bee111048e7\",\"serial\":\"9b51c01df81263d286ef8321c415ac07\",\"type\":\"payload\"},\"signature\":\"5c3ebc6d8c4b47185a87a4f86701b3171cbf37502c5de8c71ea9abd22db083d29c4667ea3ccd0c7a346786e31a3f1d45fb431b0cd67f0b8a5636d6e30876d9c5\",\"type\":\"coin\"},{\"payload\":{\"protocol_version\":\"http://opencoin.org/1.0\",\"issuer_id\":\"1180573b185da725f2f49cb414231bbb6afda290cda29b699cd3292a78bd7e92\",\"cdd_location\":\"http://opencent.org\",\"denomination\":1,\"mint_key_id\":\"29aba2dfb4af678666f0f2e058c5a454de6b7fec478ac3fa45d8f4c4dc9df1c7\",\"serial\":\"9a3b32d125fec1a6f6428ebc84c517cb\",\"type\":\"payload\"},\"signature\":\"4787978825a66c19c22fa87784b9b28a186afbf72bc9c7fdaf0a10f189c61cd902dc31e9f5f9b84ff11cc68c00060920134602cd002f67bb0a9c381b6fc0583b\",\"type\":\"coin\"}],\"type\":\"request invalidation\"}" http://localhost:8080/gulden/message-api</pre>
+						<p>Test with HURL: TBD
+						<h4>Responses</h4> TBD
+						
 					</div>
 				</article>
 			</section>

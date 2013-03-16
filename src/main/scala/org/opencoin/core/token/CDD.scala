@@ -1,6 +1,6 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.util.BencodeEncoder
+//import org.opencoin.core.util.BencodeEncoder
 //import com.fasterxml.jackson.annotation._
 
 //@JsonPropertyOrder(alphabetic=true)

@@ -1,17 +1,18 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.util.BencodeEncoder
+import org.opencoin.core.token.Bencode
+//import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import java.net.URL
 
-case class Blank (
+case class Blank(
     `type`: String = "payload",
     protocol_version: URL, 
     issuer_id: BigInt, 
     cdd_location: URL,
     denomination: Int,
     mint_key_id: BigInt,
-    serial: BigInt) {
+    serial: BigInt) extends Bencode {
 	
   require(`type` == "payload")
   require(protocol_version != null)
@@ -22,8 +23,28 @@ case class Blank (
   require(serial != null)
 
   //TODO This may become a trait, but first tests failed to execute.
-  def canonical = BencodeEncoder.encode(this)
+  //def getBencode = BencodeEncoder.encode(getCCParams(this))
   
+  //def getBencode = BencodeEncoder.encode(this)
+  
+  def getKeyValue = Map(
+    "type" -> `type`,
+    "protocol_version" -> protocol_version, 
+    "issuer_id" -> issuer_id, 
+    "cdd_location" -> cdd_location,
+    "denomination" -> denomination,
+    "mint_key_id" -> mint_key_id,
+    "serial" -> serial)
+  
+/*  def getKeyValue = Map(
+    `type` -> "payload",
+    "protocol_version" -> protocol_version, 
+    "issuer_id" -> issuer_id, 
+    "cdd_location" -> cdd_location,
+    "denomination" -> denomination,
+    "mint_key_id" -> mint_key_id,
+    "serial" -> serial)
+    */
 	/**
 	 * The object is serialized according to Bencode dictionary format. This excludes the
 	 * signature because the signature is build over all other serialized elements.

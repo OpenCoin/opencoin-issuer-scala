@@ -129,7 +129,7 @@ object Wizard extends Logging{
       additional_info)
 	  
 	println("Calculating signature...")
-	val signature = sign(cdd.canonical, keyPair._2, "SHA256withRSA")
+	val signature = sign(cdd.getBencode, keyPair._2, "SHA256withRSA")
 	println("Signature: " + signature)
 
 	println("Creating CDD Certificate...")

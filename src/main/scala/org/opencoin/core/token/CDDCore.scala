@@ -3,7 +3,8 @@ package org.opencoin.core.token
 import java.net.URL
 import java.util.Date
 import org.opencoin.issuer.FlatCDD
-import org.opencoin.core.util.BencodeEncoder
+import org.opencoin.core.token.Bencode
+//import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import scala.collection.immutable.TreeSet
 
@@ -24,8 +25,7 @@ case class CDDCore(
     invalidation_service: List[(Int, URL)], 
     denominations: List[Int], 
     additional_info: String) //This field can be empty.
-	//extends BencodeEncoder
-  {
+  extends Bencode {
 
   require(`type` == "cdd", "Illegal parameter 'type': " + `type`)
   require(protocol_version != null, "Empty  parameter 'protocol_version'.")
@@ -42,7 +42,23 @@ case class CDDCore(
   require(invalidation_service != null, "Empty  parameter 'invalidation_service'.")
   require(denominations != null, "Empty  parameter 'denominations'.")
 	
-  def canonical = BencodeEncoder.encode(CDDCore.this)
+  def getKeyValue = Map(
+    "type" -> `type`, 
+    "protocol_version" -> protocol_version,
+    "cdd_location" -> cdd_location, 
+    "issuer_cipher_suite" -> issuer_cipher_suite, 
+    "issuer_public_master_key" -> issuer_public_master_key, 
+    "cdd_serial" -> cdd_serial, 
+    "cdd_signing_date" -> cdd_signing_date, 
+    "cdd_expiry_date" -> cdd_expiry_date, 
+    "currency_name" -> currency_name, 
+    "currency_divisor" -> currency_divisor, 
+    "info_service" -> info_service, 
+    "validation_service" -> validation_service, 
+    "renewal_service" -> renewal_service, 
+    "invalidation_service" -> invalidation_service, 
+    "denominations" -> denominations, 
+    "additional_info" -> additional_info)
 
   def getFlatCDD(latest: Boolean, signature: BigInt): FlatCDD = {
 	FlatCDD(

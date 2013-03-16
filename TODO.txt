@@ -8,3 +8,4 @@ To Dos
  * Implement certificate revokation mechanism. OCSP kind of style. getAllMintKeyCertificates may only return valid mintkeys. If information service should be used as a revocation service, responds may be need to be signed?
  * Implement authentication and account-integration. Maybe with OAuth?
  * Many more.
+ * Implement "Metrics" https://github.com/codahale/metrics

@@ -1,7 +1,8 @@
 package org.opencoin.core.token
 
 import java.util.Date
-import org.opencoin.core.util.BencodeEncoder
+import org.opencoin.core.token.Bencode
+//import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import org.opencoin.issuer.FlatMintKey
 
@@ -14,7 +15,8 @@ case class MintKeyCore (
     denomination: Int, 
     sign_coins_not_before: Date, 
     sign_coins_not_after: Date, 
-    coins_expiry_date: Date) {
+    coins_expiry_date: Date) 
+  extends Bencode {
   //TODO This requirement causes Squeryl exception
   require(`type` == "mint key")
   require(id != null)
@@ -26,7 +28,16 @@ case class MintKeyCore (
   require(sign_coins_not_after != null)
   require(coins_expiry_date != null)
 
-  def canonical = BencodeEncoder.encode(MintKeyCore.this)
+  def getKeyValue = Map(
+    "type" -> `type`,
+	"id" -> id, 
+    "issuer_id" -> issuer_id, 
+    "cdd_serial" -> cdd_serial, 
+    "public_mint_key" -> public_mint_key, 
+    "denomination" -> denomination, 
+    "sign_coins_not_before" -> sign_coins_not_before, 
+    "sign_coins_not_after" -> sign_coins_not_after, 
+    "coins_expiry_date" -> coins_expiry_date)
   
   def getFlatMintKey(signature: BigInt): FlatMintKey = {
 	FlatMintKey (
