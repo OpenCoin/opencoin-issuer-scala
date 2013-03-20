@@ -7,9 +7,9 @@ import java.util.Date
 
 trait Bencode {
   
-  def getBencode: String = encode(this.getKeyValue)
+  def bencode: String = encode(this.keyValues)
   
-  def getKeyValue: Map[String, Any]
+  def keyValues: Map[String, Any]
   
 /*  def getCCParams(cc: AnyRef) =
     (Map[String, Any]() /: cc.getClass.getDeclaredFields) {(a, f) =>
@@ -53,7 +53,7 @@ trait Bencode {
       case x: Tuple21[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_] => list(x.productIterator.toList)
       case x: Tuple22[_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_] => list(x.productIterator.toList)
       case x: Map[String, _] => dictionary(x)
-      case x: Bencode => dictionary(x.getKeyValue)
+      case x: Bencode => dictionary(x.keyValues)
       //case x: AnyRef => encode(getCCParams(x))
       case _ => ""
     }

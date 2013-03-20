@@ -1,8 +1,7 @@
 package org.opencoin.issuer
 
 import org.eintr.loglady.Logging
-import com.codahale.jerkson.Json._
-import org.opencoin.core.util.CustomJson._
+import org.opencoin.core.util.JacksonWrapper._
 import org.opencoin.core.messages._
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.MintKey
@@ -17,17 +16,17 @@ import org.opencoin.core.token.MintKey
 
 object Messages extends Logging {
   def process(methods: Methods, content: String): Response = {
-	val json = CustomJson.parse[Map[String,Any]](content)
+	val json = deserialize[Map[String,Any]](content)
 	log.debug("Request type: " + json("type").asInstanceOf[String])
 	json("type").asInstanceOf[String] match {
 	  case "request cdd" => {
-		val request = CustomJson.parse[RequestCdd](content)
+		val request = deserialize[RequestCdd](content)
 		val cdd = methods.getCdd(request.cdd_serial)
 		ResponseCdd("response cdd", request.message_reference, 200, "OK", cdd)
 	  }
 	  case "request cdd serial" => {
 	    log.debug("Request cdd serial detected.")
-		val request = CustomJson.parse[RequestCddSerial](content)
+		val request = deserialize[RequestCddSerial](content)
 		log.debug("Get latest CDD...")
 		val cdd = methods.getLatestCdd()
 		log.debug("Message reference: "+ request.message_reference + " Serial: "+cdd.cdd.cdd_serial)
@@ -36,7 +35,7 @@ object Messages extends Logging {
 	  }
 	  case "request mint keys" => {
 		//TODO What to do if both denomination and IDs are provided?
-	    val request = CustomJson.parse[RequestMintKeys](content)
+	    val request = deserialize[RequestMintKeys](content)
 		if (request.mint_key_ids.isEmpty == false) {
 		  val mintkeys = methods.getMintKeysById(request.mint_key_ids)
 		  ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys)
@@ -51,7 +50,7 @@ object Messages extends Logging {
 		}
 	  }
 	  case "request renewal" => {
-		val request = CustomJson.parse[RequestRenewal](content)
+		val request = deserialize[RequestRenewal](content)
 		val blindSignatures = methods.renew(request.coins, request.blinds)
 		blindSignatures match {
 			case Some(blindSig) =>
@@ -61,7 +60,7 @@ object Messages extends Logging {
 		}
 	  }
 	  case "request resume" => {
-		val request = CustomJson.parse[RequestResume](content)
+		val request = deserialize[RequestResume](content)
 		val blindSignatures = methods.resume(request.transaction_reference.toString)
 		blindSignatures match {
 			case Some(blindSig) =>
@@ -71,7 +70,7 @@ object Messages extends Logging {
 		}
 	  }
 	  case "request validation" => {
-		val request = CustomJson.parse[RequestValidation](content)
+		val request = deserialize[RequestValidation](content)
 		val blindSignatures = methods.validate(request.authorization_info, request.blinds)
 		blindSignatures match {
 			case Some(blindSig) =>
@@ -81,7 +80,7 @@ object Messages extends Logging {
 		}
 	  }
 	  case "request invalidation" => {
-		val request = CustomJson.parse[RequestInvalidation](content)
+		val request = deserialize[RequestInvalidation](content)
 		if (methods.invalidate(request.authorization_info, request.coins) == true)
 			ResponseInvalidation("response invalidation", request.message_reference, 200, "OK")
 		else

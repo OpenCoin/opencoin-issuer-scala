@@ -34,15 +34,17 @@ object generateKeyPair {
   }
 }
 
-object hash {
+object hash extends Logging {
 
   /** create a SHA-256 hash from a String. Found in net.liftweb.util.SecurityHelpers */  
   //TODO A good library for more algorithms https://github.com/Nycto/Hasher
   def apply(in: String, algorithm: String): BigInt = algorithm match { 
-    case "SHA-256" =>
+    case "SHA-256" => {
+      log.debug("Hashing: " + in)
 	  BigInt(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")))
 	  //Base64.encode(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")).mkString)
-	case _ => null
+    }
+    case _ => null
   }
 }
 /*

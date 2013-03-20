@@ -17,6 +17,8 @@ import com.fasterxml.jackson.core.Version
 import java.net.URL
 import java.util.Date
 
+//TODO: Upgrade to https://github.com/randhindi/jerkson
+
 object CustomJson extends com.codahale.jerkson.Json {
   val module = new SimpleModule("CustomJson", Version.unknownVersion())
   module.addSerializer(classOf[BigInt], new BigIntSerializer)

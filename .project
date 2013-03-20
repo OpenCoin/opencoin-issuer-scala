@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>Finocle</name>
+  <name>Opencoin Issuer Scala</name>
   <buildSpec>
     <buildCommand>
       <name>org.scala-ide.sdt.core.scalabuilder</name>

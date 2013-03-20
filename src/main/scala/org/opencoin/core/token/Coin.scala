@@ -11,7 +11,7 @@ case class Coin(
   require(payload != null)
   require(signature != null)
 
-  def getBencode = payload.getBencode
+  def bencode = payload.bencode
 }
 
 //import net.liftweb._

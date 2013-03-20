@@ -27,7 +27,7 @@ case class Blank(
   
   //def getBencode = BencodeEncoder.encode(this)
   
-  def getKeyValue = Map(
+  def keyValues = Map(
     "type" -> `type`,
     "protocol_version" -> protocol_version, 
     "issuer_id" -> issuer_id, 

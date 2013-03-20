@@ -15,7 +15,7 @@ case class Blind(
   require(blinded_payload_hash != null)
   require(mint_key_id != null)
   
-  def getKeyValue = Map(
+  def keyValues = Map(
     "type" -> `type`,
     "reference" -> reference,
     "blinded_payload_hash" -> blinded_payload_hash,

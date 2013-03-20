@@ -28,7 +28,7 @@ case class MintKeyCore (
   require(sign_coins_not_after != null)
   require(coins_expiry_date != null)
 
-  def getKeyValue = Map(
+  def keyValues = Map(
     "type" -> `type`,
 	"id" -> id, 
     "issuer_id" -> issuer_id, 

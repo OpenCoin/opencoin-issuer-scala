@@ -8,7 +8,7 @@ import org.opencoin.core.token.Bencode
 
 case class PublicRSAKey(modulus: BigInt, public_exponent: BigInt) extends Bencode {
   
-  def getKeyValue = Map(
+  def keyValues = Map(
       "modulus" -> modulus,
       "public_exponent" -> public_exponent)
  // def this(modulus: BigInteger, public_exponent: BigInteger) = this(Base64(modulus.toString), Base64(public_exponent.toString))

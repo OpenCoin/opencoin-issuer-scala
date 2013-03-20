@@ -106,8 +106,8 @@ class Methods(db: Database) extends Logging {
   private def mint(blind: Blind): BlindSignature = {
     //import com.github.tototoshi.base64.{Base64 => Tototoshi}
 	val mintkey: PrivateRSAKey = PrivateKeyTable.get(db, blind.mint_key_id)
-	//val hash = crypto.hash(blind.getBencode, mintkey.hashAlg) Hashing should be part of the sign method. Test it.
-	val signature = crypto.sign(blind.getBencode, mintkey, mintkey.cipher_suite)
+	//val hash = crypto.hash(blind.bencode, mintkey.hashAlg) Hashing should be part of the sign method. Test it.
+	val signature = crypto.sign(blind.bencode, mintkey, mintkey.cipher_suite)
 	BlindSignature("blind signature", blind.reference, signature)
   }
   
@@ -165,10 +165,10 @@ class Methods(db: Database) extends Logging {
   }
   
   private def isValidSignature(coin: Coin, key: PublicRSAKey): Boolean = 
-    isValidSignature(coin.getBencode.getBytes, coin.signature.toByteArray, key)
+    isValidSignature(coin.bencode.getBytes, coin.signature.toByteArray, key)
 
   private def isValidSignature(cert: MintKey): Boolean = 
-    isValidSignature(cert.mint_key.getBencode.getBytes, cert.signature.toByteArray, cert.mint_key.public_mint_key)
+    isValidSignature(cert.mint_key.bencode.getBytes, cert.signature.toByteArray, cert.mint_key.public_mint_key)
 
   private def isValid(cert: MintKey): Boolean = {
 	val today = new Date

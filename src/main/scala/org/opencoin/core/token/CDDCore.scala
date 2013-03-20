@@ -42,7 +42,7 @@ case class CDDCore(
   require(invalidation_service != null, "Empty  parameter 'invalidation_service'.")
   require(denominations != null, "Empty  parameter 'denominations'.")
 	
-  def getKeyValue = Map(
+  def keyValues = Map(
     "type" -> `type`, 
     "protocol_version" -> protocol_version,
     "cdd_location" -> cdd_location, 
