@@ -1,14 +1,8 @@
 package org.opencoin.issuer
 
-//import org.scalaquery.session._
-//import org.scalaquery.session.Database.threadLocalSession
-//import org.scalaquery.ql.extended.H2Driver.Implicit._
-//import org.scalaquery.ql.basic.{BasicTable => Table}
-//import org.scalaquery.ql.TypeMapper._
-import org.scalaquery.ql.ColumnOps //This contains the operators ===, is and like.
-import org.scalaquery.ql.MappedTypeMapper
-//import org.scalaquery.ql._
-//import org.scalaquery.session.Database.threadLocalSession
+//import org.scalaquery.ql.ColumnOps //This contains the operators ===, is and like.
+import scala.slick.lifted.ColumnExtensionMethods
+import scala.slick.lifted.MappedTypeMapper
 import java.net.URL
 import java.util.Date
 import java.math.BigInteger

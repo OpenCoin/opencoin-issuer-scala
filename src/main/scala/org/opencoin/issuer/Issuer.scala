@@ -6,7 +6,7 @@ import com.twitter.finagle.http.{Http, RichHttp, Request}
 import com.twitter.finagle.builder.{Server, ServerBuilder}
 import java.net.InetSocketAddress
 import org.eintr.loglady.Logging
-import org.scalaquery.session.Database
+import scala.slick.session.Database
 
 /**
  * This is the starting point which initializes and starts the issuer. You may want to see

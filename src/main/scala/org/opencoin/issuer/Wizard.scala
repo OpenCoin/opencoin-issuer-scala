@@ -11,13 +11,10 @@ import org.eintr.loglady.Logging
 import org.opencoin.core.token.CDDCore
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.PublicRSAKey
-import org.scalaquery.session.Database
-import org.scalaquery.session._
-import org.scalaquery.session.Database.threadLocalSession
-import org.scalaquery.ql.extended.H2Driver.Implicit._
-import org.scalaquery.ql.basic.{BasicTable => Table}
-import org.scalaquery.ql._
 import org.opencoin.core.util.crypto._
+import scala.slick.driver.H2Driver.simple._
+import Database.threadLocalSession
+
 
 /**
  * This wizard is meant to be a simple tool to create test data. In most cases you may just

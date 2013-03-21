@@ -1,15 +1,11 @@
 package org.opencoin.issuer
 
-//import org.scalaquery._
-import org.scalaquery.ql._
-import basic.{ BasicTable => Table, _ }
-import basic.BasicDriver.Implicit._
-import org.scalaquery.session._
+import scala.slick.driver.H2Driver.simple._
+import Database.threadLocalSession
 import java.util.Date
 import java.net.URL
 import org.opencoin.core.token.CDD
 import org.opencoin.issuer.TypeMappers._
-import org.scalaquery.session.Database.threadLocalSession
 
 object CDDTable extends Table[FlatCDD]("CDD") {
   

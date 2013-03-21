@@ -1,13 +1,9 @@
 package org.opencoin.issuer
 
 import java.math.BigInteger
-//import org.scalaquery._
-import org.scalaquery.ql._
-import basic.{ BasicTable => Table, _ }
-import basic.BasicDriver.Implicit._
-import org.scalaquery.session._
 import org.opencoin.issuer.TypeMappers._
-import org.scalaquery.session.Database.threadLocalSession
+import scala.slick.driver.H2Driver.simple._
+import Database.threadLocalSession
 
 /**
  * This object stores private issuer and mint keys.

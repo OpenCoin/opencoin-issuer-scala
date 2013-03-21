@@ -9,12 +9,8 @@ import org.opencoin.issuer.TypeMappers._
 import org.opencoin.issuer.Testdata._
 import org.opencoin.core.token._
 import org.opencoin.core.util.crypto
-//import org.opencoin.issuer.PrivateRSAKey
-import org.scalaquery.session._
-import org.scalaquery.ql.extended.H2Driver.Implicit._
-import org.scalaquery.ql.basic.{BasicTable => Table}
-import org.scalaquery.ql._
-import org.scalaquery.session.Database.threadLocalSession
+import scala.slick.driver.H2Driver.simple._
+import Database.threadLocalSession
 
 /**
  * This is the actual application logic of the issuer. Requests come from either Respond or 

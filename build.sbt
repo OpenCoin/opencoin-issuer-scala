@@ -14,7 +14,7 @@ version := "0.1"
 
 organization  := "org.opencoin"
 
-scalaVersion  := "2.9.2"
+scalaVersion  := "2.10.+"
 
 resolvers ++= Seq(
     "twitter.com" at "http://maven.twttr.com/",
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
     "com.twitter" %% "finagle-http" % "6.1.0",
     // JSON
     //"com.fasterxml" % "jackson-module-scala" % "1.9.3",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.2.0-SNAPSHOT", //"1.9.3",
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.2.0-SNAPSHOT",
     // Logging
     "org.eintr.loglady" %% "loglady" % "1.1.0",
     "ch.qos.logback" % "logback-classic" % "1.0.+",
@@ -40,9 +40,7 @@ libraryDependencies ++= Seq(
 	//"org.squeryl" %% "squeryl" % "0.9.5-2",
 	//"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
 	"com.h2database" % "h2" % "1.2.127",
-	"org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5"
-	//"com.typesafe.slick" %% "slick" % "1.0.0"
-	//"org.scala-lang" % "scala-swing" % "2.9.2"
+	"com.typesafe.slick" %% "slick" % "1.0.0"
 )
 
 scalacOptions ++= Seq("-unchecked", "-deprecation")

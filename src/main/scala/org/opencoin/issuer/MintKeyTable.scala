@@ -2,17 +2,14 @@ package org.opencoin.issuer
 
 import java.math.BigInteger
 import org.eintr.loglady.Logging
-//import org.scalaquery._
-import org.scalaquery.ql._
-import basic.{ BasicTable => Table, _ }
-import basic.BasicDriver.Implicit._
-import org.scalaquery.session._
 import java.util.Date
 import org.opencoin.core.token.CDD
 import org.opencoin.core.token.MintKey
 import org.opencoin.issuer.TypeMappers._
-import org.scalaquery.session.Database.threadLocalSession
+import scala.slick.driver.H2Driver.simple._
+import Database.threadLocalSession
 
+  
 object MintKeyTable extends Table[FlatMintKey]("MINTKEY") with Logging {
 
   def id = column[BigInt]("id", O NotNull)
@@ -62,3 +59,4 @@ object MintKeyTable extends Table[FlatMintKey]("MINTKEY") with Logging {
   } */
 
 }
+
