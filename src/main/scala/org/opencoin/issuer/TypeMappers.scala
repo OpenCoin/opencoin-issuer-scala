@@ -23,7 +23,7 @@ object TypeMappers {
 //	x => x.toByteArray, 
 //	x => new BigHexInt(new BigInteger(x).toString(16))) //TODO more efficient conversion. e.g. convert to java.sql.Blob?
   implicit val BigIntTypeMapper = MappedTypeMapper.base[BigInt, Array[Byte]] (_.toByteArray, BigInt(_)) //TODO convert to java.sql.Blob?
-  implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, Array[Byte]] (_.toByteArray, new BigInteger(_)) //TODO convert to java.sql.Blob?
+  //implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, Array[Byte]] (_.toByteArray, new BigInteger(_)) //TODO convert to java.sql.Blob?
  // implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, String] (_.toString, new BigInteger(_)) //TODO convert to java.sql.Blob?
   implicit val URLMapper = MappedTypeMapper.base[URL, String] (_.toString, new URL(_))
   implicit val URLListMapper = MappedTypeMapper.base[List[URL], String] (_.mkString("|"), _.split("\\|").toList.map(new URL(_)))

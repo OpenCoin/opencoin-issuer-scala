@@ -32,7 +32,6 @@ object Responses extends Logging {
     response.content = content(info, gzip)
     response
   }
-
   
   def error(info: String, gzip: Boolean = false): Response = {
   	log.debug("Responses built, error, data: %s" format info)

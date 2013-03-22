@@ -9,7 +9,6 @@ import org.opencoin.issuer.TypeMappers._
 import scala.slick.driver.H2Driver.simple._
 import Database.threadLocalSession
 
-  
 object MintKeyTable extends Table[FlatMintKey]("MINTKEY") with Logging {
 
   def id = column[BigInt]("id", O NotNull)

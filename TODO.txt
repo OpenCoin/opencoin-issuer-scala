@@ -1,6 +1,7 @@
 To Dos
 ======
  * Implement Tests
+ * Get rid of *Table classes by using mapped projects: http://stackoverflow.com/questions/13906684/scala-slick-method-i-can-not-understand-so-far
  * Combine and appropriately rename MintKey and MintKeyCertificate classes. Same applies for CDD. E.g. CDD, CDDInner, CDDFlat, CDDTable.
  * Now RSA-2048 format is hard-coded. Implement algorithm-independent key format and usage of appropriate cipher-suite.
  * Implement "resume" mechanism

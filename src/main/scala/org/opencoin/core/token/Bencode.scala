@@ -1,6 +1,5 @@
 package org.opencoin.core.token
 
-import java.math.BigInteger
 import java.net.URL
 import java.util.Date
 //import org.opencoin.core.util.BencodeEncoder._
@@ -22,10 +21,10 @@ trait Bencode {
    */
   def encode(input: Any): String =
     input match {
-      case x: Int => int(x.toString)
-      case x: Long => int(x.toString)
-      case x: BigInt => int(x.toString)
-      case x: BigInteger => int(x.toString)
+      case x: Int => int(x)
+      case x: Long => int(x)
+      //According to the Opencoin spec, Big Integers are to be "bencoded" as string:
+      case x: BigInt => string(x.toString(16))
       case x: String => string(x)
       case x: URL => string(x.toString)
       case x: Date => string(dateFormat.format(x))
@@ -58,7 +57,10 @@ trait Bencode {
       case _ => ""
     }
 
-  private def int(input: String): String =
+  private def int(input: Int): String =
+    "i" + input + "e"
+
+  private def int(input: Long): String =
     "i" + input + "e"
 
   private def string(input: String): String =
