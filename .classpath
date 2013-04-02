@@ -25,10 +25,10 @@
   <classpathentry path="/home/jan/.ivy2/cache/com.google.guava/guava/jars/guava-13.0.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/jan/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.0-RC5.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/jan/.ivy2/cache/org.eintr.loglady/loglady_2.10/jars/loglady_2.10-1.1.0.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/jan/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.2.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/jan/.ivy2/cache/ch.qos.logback/logback-classic/jars/logback-classic-1.0.10.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/jan/.ivy2/cache/ch.qos.logback/logback-core/jars/logback-core-1.0.10.jar" kind="lib"></classpathentry>
-  <classpathentry path="/home/jan/.ivy2/cache/com.h2database/h2/jars/h2-1.2.127.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/jan/.ivy2/cache/ch.qos.logback/logback-classic/jars/logback-classic-1.0.11.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/jan/.ivy2/cache/ch.qos.logback/logback-core/jars/logback-core-1.0.11.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/jan/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.4.jar" kind="lib"></classpathentry>
+  <classpathentry path="/home/jan/.ivy2/cache/com.h2database/h2/jars/h2-1.3.171.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/jan/.ivy2/cache/com.typesafe.slick/slick_2.10/jars/slick_2.10-1.0.0.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/jan/.ivy2/cache/org.scalatest/scalatest_2.10/jars/scalatest_2.10-1.9.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/home/jan/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.10.0.jar" kind="lib"></classpathentry>

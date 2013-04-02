@@ -5,7 +5,7 @@ case class BlindSignature(
     reference: Int,
     blind_signature: BigInt) {
 	
-  require(`type` == "blind signature")
-  require(reference != 0)
-  require(blind_signature != null)
+  require(`type` == "blind signature", "Parameter 'type' is invalid.")
+  require(reference > 0, "Parameter 'reference' is invalid.")
+  require(blind_signature > 0, "Parameter 'blind_signature' is invalid.")
 }

@@ -39,7 +39,7 @@ libraryDependencies ++= Seq(
     //"mysql" % "mysql-connector-java" % "5.1.20"
 	//"org.squeryl" %% "squeryl" % "0.9.5-2",
 	//"org.squeryl" %% "squeryl" % "0.9.6-SNAPSHOT",
-	"com.h2database" % "h2" % "1.2.127",
+	"com.h2database" % "h2" % "1.3.171", //"1.2.127",
 	"com.typesafe.slick" %% "slick" % "1.0.0"
 )
 

@@ -7,9 +7,9 @@ case class Coin(
     payload: Blank,
     signature: BigInt) {
 	
-  require(`type` == "coin")
-  require(payload != null)
-  require(signature != null)
+  require(`type` == "coin", "Parameter 'type' is invalid.")
+  require(payload != null, "Parameter 'payload' is invalid.")
+  require(signature > 0, "Parameter 'signature' is invalid.")
 
   def bencode = payload.bencode
 }

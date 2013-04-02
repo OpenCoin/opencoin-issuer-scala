@@ -26,7 +26,7 @@ class Methods(db: Database) extends Logging {
       db withSession { session: Session => // passes the session
         CDDTable.ddl.create(session)
 	    log.debug("CDD Table created. Inserting example CDD...")
-		CDDTable.insert(exampleFlatCDD)(session)
+		CDDTable.insert(exampleCDD)(session)
 	    log.debug("Example CDD inserted. Creating MintKeyTable...")
 
 		MintKeyTable.ddl.create(session)
@@ -53,7 +53,7 @@ class Methods(db: Database) extends Logging {
 
   //def getOneMintKey(id: Base64) = MintKeyTable.getMintKey(db, id)
 
-  def getMintKeysById(id: List[BigInt]) = id.map(MintKeyTable.getMintKey(db, _))
+  def getMintKeysById(id: List[BigInt]) = id.flatMap(MintKeyTable.getMintKey(db, _))
 
   def getMintKeys(denomination: Int) = MintKeyTable.getMintKeys(db, denomination)
 
@@ -62,17 +62,17 @@ class Methods(db: Database) extends Logging {
   def getAllMintKeys = MintKeyTable.getAllMintKeys(db)
 
   def validate(token: String, blinds: List[Blind]): Option[List[BlindSignature]] = {
-    val value = blinds.map(getDenomination).sum
+    val value = blinds.map(x => getDenomination(x).getOrElse(0)).sum
   	log.debug("validate. Token: " + token + " Blinds: " + blinds.toString + " Value: " + value)
 	if (authenticate(token, value))
-	  Some(blinds.map(mint))
+	  Some(blinds.flatMap(mint))
 	else None
   }
   
   def renew(coins: List[Coin], blinds: List[Blind]): Option[List[BlindSignature]] = {
     if(sumCoins(coins) == sumBlinds(blinds) && areValid(coins)) {
 	  if(storeInDSDB(coins)) {
-	    Some(blinds.map(mint))
+	    Some(blinds.flatMap(mint))
 	  }
       else None
 	}
@@ -99,15 +99,15 @@ class Methods(db: Database) extends Logging {
 
   //################ Private methods: ##################
   
-  private def mint(blind: Blind): BlindSignature = {
+  private def mint(blind: Blind): Option[BlindSignature] = {
     //import com.github.tototoshi.base64.{Base64 => Tototoshi}
 	val mintkey: PrivateRSAKey = PrivateKeyTable.get(db, blind.mint_key_id)
 	//val hash = crypto.hash(blind.bencode, mintkey.hashAlg) Hashing should be part of the sign method. Test it.
-	val signature = crypto.sign(blind.bencode, mintkey, mintkey.cipher_suite)
-	BlindSignature("blind signature", blind.reference, signature)
+	val signature = crypto.sign(blind.bencode, mintkey, mintkey.cipher_suite).getOrElse(return None)
+	Some(BlindSignature("blind signature", blind.reference, signature))
   }
   
-  private def getDenomination(blind: Blind): Int = MintKeyTable.getMintKey(db, blind.mint_key_id).mint_key.denomination
+  private def getDenomination(blind: Blind): Option[Int] = MintKeyTable.getMintKey(db, blind.mint_key_id).map(_.mint_key.denomination)
 
   //TODO implement
   private def authenticate(password: String, value: Int): Boolean = {
@@ -115,11 +115,11 @@ class Methods(db: Database) extends Logging {
     else false
   }
 
-  private def sumCoins(coins: List[Coin]): Int =
-	coins.map(x => MintKeyTable.getMintKey(db, x.payload.mint_key_id).mint_key.denomination).sum
+  private def sumCoins(coins: List[Coin]): Option[Int] =
+	Some(coins.map(x => MintKeyTable.getMintKey(db, x.payload.mint_key_id).getOrElse(return None).mint_key.denomination).sum)
 
-  private def sumBlinds(blinds: List[Blind]): Int =
-	blinds.map(x => MintKeyTable.getMintKey(db, x.mint_key_id).mint_key.denomination).sum
+  private def sumBlinds(blinds: List[Blind]): Option[Int] =
+	Some(blinds.map(x => MintKeyTable.getMintKey(db, x.mint_key_id).getOrElse(return None).mint_key.denomination).sum)
   
   private def areValid(coins: List[Coin]): Boolean = coins.forall(isValid)
 
@@ -134,10 +134,10 @@ class Methods(db: Database) extends Logging {
     val mintkeycert = MintKeyTable.getMintKey(db, coin.payload.mint_key_id)
 	
 	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
-    val denomination = mintkeycert.mint_key.denomination == coin.payload.denomination
-	val mintKeyCert = isValid(mintkeycert)
-	val spent = notSpent(coin)
-    val signature = isValidSignature(coin, mintkeycert.mint_key.public_mint_key)
+    val denomination = mintkeycert.exists(_.mint_key.denomination == coin.payload.denomination)
+    val mintKeyCert = mintkeycert.exists(isValid(_))
+    val signature = mintkeycert.exists(mk => isValidSignature(coin, mk.mint_key.public_mint_key))
+    val spent = notSpent(coin)
 	
 	denomination && mintKeyCert && spent && signature
   }
@@ -173,8 +173,8 @@ class Methods(db: Database) extends Logging {
 	// To prevent side channel attacks, all evaluations are calculated and stored in values before the final result is calculated and returned:
 	val sign_coins_not_before = cert.mint_key.sign_coins_not_before.before(today)
 	val coins_expiry_date = cert.mint_key.coins_expiry_date.after(today)
-	val cdd_signing_date = cddcert.cdd.cdd_signing_date.before(today)
-    val cdd_expiry_date = cddcert.cdd.cdd_expiry_date.after(today)
+	val cdd_signing_date = cddcert.exists(_.cdd.cdd_signing_date.before(today))
+    val cdd_expiry_date = cddcert.exists(_.cdd.cdd_expiry_date.after(today))
 	val signature = isValidSignature(cert)
 	
 	sign_coins_not_before && coins_expiry_date && cdd_signing_date && cdd_expiry_date && signature

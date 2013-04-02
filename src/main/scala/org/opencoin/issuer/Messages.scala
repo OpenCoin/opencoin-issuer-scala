@@ -22,7 +22,17 @@ object Messages extends Logging {
 	  case "request cdd" => {
 		val request = deserialize[RequestCdd](content)
 		val cdd = methods.getCdd(request.cdd_serial)
-		ResponseCdd("response cdd", request.message_reference, 200, "OK", cdd)
+		cdd match {
+			case None => {
+			  log.debug("None returned.")
+			  ResponseError("response cdd", request.message_reference, 400, "Not found")
+			}
+			case Some(x) => {
+			  log.debug("Some returned.")
+			  ResponseCdd("response cdd", request.message_reference, 200, "OK", x)
+			}
+		}
+		
 	  }
 	  case "request cdd serial" => {
 	    log.debug("Request cdd serial detected.")
@@ -34,9 +44,15 @@ object Messages extends Logging {
 		ResponseCddSerial("response cdd serial", request.message_reference, 200, "OK", cdd.cdd.cdd_serial)
 	  }
 	  case "request mint keys" => {
-		//TODO What to do if both denomination and IDs are provided?
+		//TODO Add to opencoin specification document what to do if both denomination and IDs are provided.
 	    val request = deserialize[RequestMintKeys](content)
-		if (request.mint_key_ids.isEmpty == false) {
+		if (request.mint_key_ids.isEmpty == false && request.denominations.isEmpty == false) {
+		  val mintkeys = methods.getMintKeysById(request.mint_key_ids)
+		  mintkeys :: methods.getMintKeys(request.denominations)
+		  mintkeys.distinct //remove duplicates
+		  ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys)
+		}
+		else if (request.mint_key_ids.isEmpty == false) {
 		  val mintkeys = methods.getMintKeysById(request.mint_key_ids)
 		  ResponseMintKeys("response mint keys", request.message_reference, 200, "OK", mintkeys)
 		}

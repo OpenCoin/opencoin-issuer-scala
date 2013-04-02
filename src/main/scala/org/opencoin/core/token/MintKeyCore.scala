@@ -1,10 +1,10 @@
 package org.opencoin.core.token
 
 import java.util.Date
-import org.opencoin.core.token.Bencode
+//import org.opencoin.core.token.Bencode
 //import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
-import org.opencoin.issuer.FlatMintKey
+//import org.opencoin.issuer.FlatMintKey
 
 case class MintKeyCore (
     `type`: String = "mint key", 
@@ -18,15 +18,15 @@ case class MintKeyCore (
     coins_expiry_date: Date) 
   extends Bencode {
   //TODO This requirement causes Squeryl exception
-  require(`type` == "mint key")
-  require(id != null)
-  require(issuer_id != null)
-  require(cdd_serial != 0)
-  require(public_mint_key != null)
-  require(denomination > 0)
-  require(sign_coins_not_before != null)
-  require(sign_coins_not_after != null)
-  require(coins_expiry_date != null)
+  require(`type` == "mint key", "Parameter 'type' must contain 'mint key'.")
+  require(id > 0, "Parameter 'id' is invalid.")
+  require(issuer_id > 0, "Parameter 'issuer_id' is invalid.")
+  require(cdd_serial > 0, "Parameter 'cdd_serial' is invalid.")
+  require(public_mint_key != null, "Parameter 'public_mint_key' is invalid.")
+  require(denomination > 0, "Parameter 'denomination' is invalid.")
+  require(sign_coins_not_before != null, "Parameter 'sign_coins_not_before' is invalid.")
+  require(sign_coins_not_after != null, "Parameter 'sign_coins_not_after' is invalid.")
+  require(coins_expiry_date != null, "Parameter 'coins_expiry_date' is invalid.")
 
   def keyValues = Map(
     "type" -> `type`,
@@ -39,10 +39,6 @@ case class MintKeyCore (
     "sign_coins_not_after" -> sign_coins_not_after, 
     "coins_expiry_date" -> coins_expiry_date)
   
-  def getFlatMintKey(signature: BigInt): FlatMintKey = {
-	FlatMintKey (
-		MintKeyCore.this.id,		MintKeyCore.this.issuer_id,		MintKeyCore.this.cdd_serial,		MintKeyCore.this.public_mint_key.modulus,		MintKeyCore.this.public_mint_key.public_exponent,		MintKeyCore.this.denomination,		MintKeyCore.this.sign_coins_not_before,		MintKeyCore.this.sign_coins_not_after,		MintKeyCore.this.coins_expiry_date,		signature)
-  }
 }
 
 /*    def serialization: String =

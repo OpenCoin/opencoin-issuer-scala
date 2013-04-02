@@ -1,6 +1,6 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.token.Bencode
+//import org.opencoin.core.token.Bencode
 //import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import java.net.URL
@@ -14,13 +14,13 @@ case class Blank(
     mint_key_id: BigInt,
     serial: BigInt) extends Bencode {
 	
-  require(`type` == "payload")
-  require(protocol_version != null)
-  require(issuer_id != null)
-  require(cdd_location != null)
-  require(denomination >= 0) //TODO This assumption needs to be confirmed with the specification.
-  require(mint_key_id != null)
-  require(serial != null)
+  require(`type` == "payload", "Parameter 'type' is invalid.")
+  require(protocol_version != null, "Parameter 'protocol_version' is invalid.")
+  require(issuer_id > 0, "Parameter 'issuer_id' is invalid.")
+  require(cdd_location != null, "Parameter 'cdd_location' is invalid.")
+  require(denomination > 0, "Parameter 'denomination' is invalid.") //TODO This assumption needs to be confirmed with the specification.
+  require(mint_key_id > 0, "Parameter 'mint_key_id' is invalid.")
+  require(serial > 0, "Parameter 'serial' is invalid.")
 
   //TODO This may become a trait, but first tests failed to execute.
   //def getBencode = BencodeEncoder.encode(getCCParams(this))

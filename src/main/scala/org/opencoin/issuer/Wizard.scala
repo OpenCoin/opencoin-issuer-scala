@@ -126,7 +126,7 @@ object Wizard extends Logging{
       additional_info)
 	  
 	println("Calculating signature...")
-	val signature = sign(cdd.bencode, keyPair._2, "SHA256withRSA")
+	val signature: BigInt = sign(cdd.bencode, keyPair._2, "SHA256withRSA").getOrElse(0)
 	println("Signature: " + signature)
 
 	println("Creating CDD Certificate...")
@@ -134,14 +134,14 @@ object Wizard extends Logging{
 	println("CDD Certificate created successfully: " + cddcert)
 	
 	println("Generating Mint Keys...")
-	val exampleMintKeys = Testdata.generateFlatMintKeys(cdd, keyPair._2)
+	val exampleMintKeys = Testdata.generateMintKeys(cdd, keyPair._2)
 	println("Mint Keys created.")
 	
 	try {
       db withSession { session: Session => // passes the session
         CDDTable.ddl.create(session)
 	    log.debug("CDD Table created. Inserting example CDD...")
-		CDDTable.insert(cdd.getFlatCDD(true, signature))(session)
+		CDDTable.insert(CDD("cdd certificate", cdd, signature))(session)
 	    log.debug("Example CDD inserted. Creating MintKeyTable...")
 
 		MintKeyTable.ddl.create(session)

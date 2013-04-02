@@ -7,38 +7,48 @@ case class MintKey(
     mint_key: MintKeyCore,
     signature: BigInt) {
 
-  require(`type` == "mint key certificate")
-  require(mint_key != null)
-  require(signature != null)
+  require(`type` == "mint key certificate", "Parameter 'type' is invalid.")
+  require(mint_key != null, "Parameter 'mint_key' is invalid.")
+  require(signature > 0, "Parameter 'signature' is invalid.")
+}
 
-  /**
-   * This constructor is here to allow creating an object from Scalaquery
-  **/
-/*  def this(
-    `type`: String = "mint key certificate",
-	type2: String = "mint key",
-	id: Base64,
-    issuer_id: Base64,
+/**
+ * This object is here to allow mapping a record from SLICK and an object to SLICK
+**/	
+object MintKey {
+  def fromRow(
+	id: BigInt,
+    issuer_id: BigInt,
     cdd_serial: Int,
-    modulus: BigInteger,
-	publicExponent: BigInteger,
+    modulus: BigInt,
+	public_exponent: BigInt,
     denomination: Int,
     sign_coins_not_before: Date,
     sign_coins_not_after: Date,
     coins_expiry_date: Date,
-	signature: Base64) = this(
-	  `type`,
-	  MintKey(
-	    type2, 
+	signature: BigInt): MintKey = MintKey(
+	  "mint key certificate",
+	  MintKeyCore(
+	    "mint key", 
 	    id, 
 		issuer_id, 
 		cdd_serial, 
-		PublicMintKey(modulus, publicExponent),
+		PublicRSAKey(modulus, public_exponent),
 		denomination, 
 		sign_coins_not_before, 
 		sign_coins_not_after, 
 		coins_expiry_date),
-	  signature) */
-  
-  //def serialization = mint_key.serialization
+	  signature)
+	  
+  def toRow(x: MintKey) = Some((
+      x.mint_key.id, 
+      x.mint_key.issuer_id, 
+      x.mint_key.cdd_serial, 
+      x.mint_key.public_mint_key.modulus,
+      x.mint_key.public_mint_key.public_exponent,
+      x.mint_key.denomination,
+      x.mint_key.sign_coins_not_before,
+      x.mint_key.sign_coins_not_after,
+      x.mint_key.coins_expiry_date,
+      x.signature))
 }

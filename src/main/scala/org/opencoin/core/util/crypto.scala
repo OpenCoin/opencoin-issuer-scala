@@ -25,10 +25,10 @@ object generateKeyPair {
 	val privateKey: RSAPrivateKey = keyPair.getPrivate.asInstanceOf[RSAPrivateKey]
 	val publicKey: RSAPublicKey = keyPair.getPublic.asInstanceOf[RSAPublicKey]
 	//This may help: keyPair.getPrivate.asInstanceOf[RSAPrivateKey].getPrivateExponent
-	val key_modulus = new BigInt(privateKey.getModulus)
-	val key_public_exponent = new BigInt(publicKey.getPublicExponent)
+	val key_modulus = BigInt(privateKey.getModulus)
+	val key_public_exponent = BigInt(publicKey.getPublicExponent)
 	//val key_private_exponent = Base64(privateKey.getPrivateExponent.toString)
-	val privKey = PrivateRSAKey(reference, cipher_suite, new BigInt(privateKey.getModulus), new BigInt(privateKey.getPrivateExponent))
+	val privKey = PrivateRSAKey(reference, cipher_suite, BigInt(privateKey.getModulus), new BigInt(privateKey.getPrivateExponent))
 	val pubKey = PublicRSAKey(key_modulus, key_public_exponent)
 	(pubKey, privKey)
   }
@@ -38,13 +38,16 @@ object hash extends Logging {
 
   /** create a SHA-256 hash from a String. Found in net.liftweb.util.SecurityHelpers */  
   //TODO A good library for more algorithms https://github.com/Nycto/Hasher
-  def apply(in: String, algorithm: String): BigInt = algorithm match { 
+  //TODO Add try/catch for MessageDigest operation
+  def apply(in: String, algorithm: String): Option[BigInt] = algorithm match { 
     case "SHA-256" => {
       log.debug("Hashing: " + in)
-	  BigInt(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")))
+      val md = MessageDigest.getInstance("SHA-256")
+      md.update(in.getBytes("UTF-8"))
+	  Some(BigInt(new BigInteger(1, md.digest))) // use this 1 to tell it is positive.
 	  //Base64.encode(MessageDigest.getInstance("SHA-256").digest(in.getBytes("UTF-8")).mkString)
     }
-    case _ => null
+    case _ => None
   }
 }
 /*
@@ -71,8 +74,9 @@ object hash extends Logging {
  * Cipher Suite is ignored for now.
 **/
 object sign {
-  def apply(token: String, privkey: PrivateRSAKey, cipherSuite: String): BigInt = {
+  def apply(token: String, privkey: PrivateRSAKey, cipherSuite: String): Option[BigInt] = {
     //TODO Use different cipher suites and key lengths. ECDSA: https://github.com/baturinsky/Scala-Ecc#readme
+    //TODO try/catch for java calls
     //require(cipherSuite=="RSA-2048")
 
 	val privateKeySpec: RSAPrivateKeySpec = new RSAPrivateKeySpec(privkey.modulus.bigInteger, privkey.private_exponent.bigInteger)
@@ -81,7 +85,7 @@ object sign {
     
     signature.initSign(key);
     signature.update(token.getBytes());
-    BigInt(signature.sign())
+	Some(BigInt(new BigInteger(1, signature.sign))) // use this 1 to tell it is positive.
   }
 }
 

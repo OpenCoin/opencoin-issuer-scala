@@ -2,8 +2,8 @@ package org.opencoin.core.token
 
 import java.net.URL
 import java.util.Date
-import org.opencoin.issuer.FlatCDD
-import org.opencoin.core.token.Bencode
+//import org.opencoin.issuer.FlatCDD
+//import org.opencoin.core.token.Bencode
 //import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 import scala.collection.immutable.TreeSet
@@ -28,19 +28,20 @@ case class CDDCore(
   extends Bencode {
 
   require(`type` == "cdd", "Illegal parameter 'type': " + `type`)
-  require(protocol_version != null, "Empty  parameter 'protocol_version'.")
-  require(cdd_location != null, "Empty  parameter 'cdd_location'.")
-  require(issuer_public_master_key != null, "Empty  parameter 'issuer_public_master_key'.")
-  require(issuer_cipher_suite != null, "Empty  parameter 'issuer_cipher_suite'.")
-  require(cdd_serial >= 0, "Empty  parameter 'cdd_serial'.")
-  require(cdd_signing_date != null, "Empty  parameter 'cdd_signing_date'.")
-  require(cdd_expiry_date != null, "Empty  parameter 'cdd_expiry_date'.")
-  require(currency_name != null, "Empty  parameter 'currency_name'.")
-  require(info_service != null, "Empty  parameter 'info_service'.")
-  require(validation_service != null, "Empty  parameter 'validation_service'.")
-  require(renewal_service != null, "Empty  parameter 'renewal_service'.")
-  require(invalidation_service != null, "Empty  parameter 'invalidation_service'.")
-  require(denominations != null, "Empty  parameter 'denominations'.")
+  require(protocol_version != null, "Empty parameter 'protocol_version'.")
+  require(cdd_location != null, "Empty parameter 'cdd_location'.")
+  require(issuer_cipher_suite != null && issuer_cipher_suite != "", "Empty parameter 'issuer_cipher_suite'.")
+  require(issuer_public_master_key != null, "Empty parameter 'issuer_public_master_key'.")
+  require(cdd_serial > 0, "Empty parameter 'cdd_serial'.")
+  require(cdd_signing_date != null, "Empty parameter 'cdd_signing_date'.")
+  require(cdd_expiry_date != null, "Empty parameter 'cdd_expiry_date'.")
+  require(currency_name != null && currency_name != "", "Empty parameter 'currency_name'.")
+  require(currency_divisor > 0, "Empty parameter 'currency_divisor'.")
+  require(info_service != null && info_service != Nil && info_service.forall(x => x._1 > 0 && x._2 != null), "Empty parameter 'info_service'.")
+  require(validation_service != null && validation_service != Nil && validation_service.forall(x => x._1 > 0 && x._2 != null), "Empty parameter 'validation_service'.")
+  require(renewal_service != null && renewal_service != Nil && renewal_service.forall(x => x._1 > 0 && x._2 != null), "Empty parameter 'renewal_service'.")
+  require(invalidation_service != null && invalidation_service != Nil && invalidation_service.forall(x => x._1 > 0 && x._2 != null), "Empty parameter 'invalidation_service'.")
+  require(denominations != null && denominations != Nil && denominations.forall(_ > 0), "Empty parameter 'denominations'.")
 	
   def keyValues = Map(
     "type" -> `type`, 
@@ -59,7 +60,7 @@ case class CDDCore(
     "invalidation_service" -> invalidation_service, 
     "denominations" -> denominations, 
     "additional_info" -> additional_info)
-
+/*
   def getFlatCDD(latest: Boolean, signature: BigInt): FlatCDD = {
 	FlatCDD(
 		latest,
@@ -85,7 +86,7 @@ case class CDDCore(
 		CDDCore.this.additional_info,
 		signature)
 	}
-
+*/
  // potentially requires for Squeryl: 
  // def this() = this(	"cdd",new URL("http://example.com"),new URL("http://example.com"),new Base64(""),"",0, new Date(0), new Date(0), "",0,Nil,Nil,Nil,Nil,Nil,"")
 

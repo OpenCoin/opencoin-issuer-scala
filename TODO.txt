@@ -1,12 +1,12 @@
 To Dos
 ======
  * Implement Tests
- * Get rid of *Table classes by using mapped projects: http://stackoverflow.com/questions/13906684/scala-slick-method-i-can-not-understand-so-far
- * Combine and appropriately rename MintKey and MintKeyCertificate classes. Same applies for CDD. E.g. CDD, CDDInner, CDDFlat, CDDTable.
+ * Implement error handling and appropriate error messages (for security reasons users shouldn't get very descriptive error messages)
+ * All Messages should verify their arguments while being created. Error handling of invalid data, e.g. in Respond class.
+ * Combine and appropriately rename MintKey and MintKeyCore classes. Same applies for CDD. E.g. CDD, CDDCore
  * Now RSA-2048 format is hard-coded. Implement algorithm-independent key format and usage of appropriate cipher-suite.
  * Implement "resume" mechanism
- * Implement error handling and appropriate error messages (for security reasons users shouldn't get very descriptive error messages)
- * Implement certificate revokation mechanism. OCSP kind of style. getAllMintKeyCertificates may only return valid mintkeys. If information service should be used as a revocation service, responds may be need to be signed?
+ * Implement certificate revocation mechanism. OCSP kind of style. getAllMintKeyCertificates may only return valid mintkeys. If information service should be used as a revocation service, responds may be need to be signed?
  * Implement authentication and account-integration. Maybe with OAuth?
  * Many more.
  * Implement "Metrics" https://github.com/codahale/metrics

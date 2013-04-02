@@ -1,6 +1,6 @@
 package org.opencoin.core.token
 
-import org.opencoin.core.token.Bencode
+//import org.opencoin.core.token.Bencode
 //import org.opencoin.core.util.BencodeEncoder
 //import org.opencoin.core.util.CanonicalJsonEncoder
 
@@ -10,10 +10,10 @@ case class Blind(
     blinded_payload_hash: BigInt,
     mint_key_id: BigInt) extends Bencode {
 	
-  require(`type` == "blinded payload hash")
-  require(reference != 0)
-  require(blinded_payload_hash != null)
-  require(mint_key_id != null)
+  require(`type` == "blinded payload hash", "Parameter 'type' is invalid.")
+  require(reference > 0, "Parameter 'reference' is invalid.")
+  require(blinded_payload_hash > 0, "Parameter 'blinded_payload_hash' is invalid.")
+  require(mint_key_id > 0, "Parameter 'mint_key_id' is invalid.")
   
   def keyValues = Map(
     "type" -> `type`,

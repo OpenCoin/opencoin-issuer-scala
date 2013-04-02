@@ -10,9 +10,9 @@ import java.math.BigInteger
 import javax.sql.rowset.serial.SerialBlob
 
 object TypeMappers {
-  implicit val JavaUtilDateTypeMapper = MappedTypeMapper.base[java.util.Date, java.sql.Date] (
-    x => new java.sql.Date(x.getTime), 
-	x => new java.util.Date(x.getTime))
+  implicit val JavaUtilDateTypeMapper = MappedTypeMapper.base[java.util.Date, Long] (
+    x => x.getTime,
+	x => new java.util.Date(x))
 // Using a Blob results in failed searches for ID with "Blob does not have a literal representation"
 //  implicit val Base64TypeMapper = MappedTypeMapper.base[Base64, java.sql.Blob] (
 //    x => new SerialBlob(x.decode), 
@@ -22,7 +22,8 @@ object TypeMappers {
 //  implicit val BigHexIntTypeMapper = MappedTypeMapper.base[BigInt, Array[Byte]] (
 //	x => x.toByteArray, 
 //	x => new BigHexInt(new BigInteger(x).toString(16))) //TODO more efficient conversion. e.g. convert to java.sql.Blob?
-  implicit val BigIntTypeMapper = MappedTypeMapper.base[BigInt, Array[Byte]] (_.toByteArray, BigInt(_)) //TODO convert to java.sql.Blob?
+//  implicit val BigIntTypeMapper = MappedTypeMapper.base[BigInt, Array[Byte]] (_.toByteArray, BigInt(_))
+  implicit val BigIntTypeMapper = MappedTypeMapper.base[BigInt, String] (_.toString, BigInt(_)) //TODO convert to binary[]
   //implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, Array[Byte]] (_.toByteArray, new BigInteger(_)) //TODO convert to java.sql.Blob?
  // implicit val BigIntegerTypeMapper = MappedTypeMapper.base[BigInteger, String] (_.toString, new BigInteger(_)) //TODO convert to java.sql.Blob?
   implicit val URLMapper = MappedTypeMapper.base[URL, String] (_.toString, new URL(_))

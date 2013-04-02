@@ -23,7 +23,7 @@ object Testdata extends Logging {
   //val issuerPrivateKey = keyPair._2
   val examplePrivateIssuerKey = issuerKeyPair._2
   
-  val exampleCDD = new CDDCore(
+  val exampleCDDCore = new CDDCore(
 	  //latest = true,
 	  `type` = "cdd",
 	  protocol_version = new URL("http://okfnpad.org/opencoin-v3"),
@@ -43,23 +43,28 @@ object Testdata extends Logging {
 	  additional_info = "This CDD is for testing purposes only.")
 	  //signature = Base64("FIumYIFs07MBZGQ+DsmJLnUGVydDMPqe9yWAxIhNQ5Tc+uePqHa/d5ns6XALWoVd3ol3bsQCXCkRVOsYk3PYGVo+VQGQAZ4CyrlKPEiHHXHrDYVVtO+UOegy7lQlaQ3dec7TfC8UKS0dfXKju/RioXoF2tOHUDwldxQnph93JBLJxRt1AJacBmwZwiHV/fxplZI471vlRgEHZmJwUDHWUo1ODbOgZ5aZY4cMqzlFr6hBFP44CKmiBo+jgdQj4sTYswgqN7WjDmquBH30U0r+O4vD3vkyR6JLQwkz3qvy7iHCWBmy0dNrtyXdhgGYQ1afUH/+1ltbOV3ekG6rid9xhg=="))
 	
-	private val cddSignature = sign(exampleCDD.bencode, examplePrivateIssuerKey, "SHA256withRSA")
-	val exampleFlatCDD: FlatCDD = exampleCDD.getFlatCDD(true, cddSignature)
+	private val cddSignature: BigInt = sign(exampleCDDCore.bencode, examplePrivateIssuerKey, "SHA256withRSA").getOrElse(0)
+	//val exampleFlatCDD: FlatCDD = exampleCDDCore.getFlatCDD(true, cddSignature)
+	val exampleCDD = CDD("cdd certificate", exampleCDDCore, cddSignature)
 	
         log.debug("Generating mint keys...")
-	val exampleMintKeys = generateFlatMintKeys(exampleCDD, examplePrivateIssuerKey)
+	val exampleMintKeys = generateMintKeys(exampleCDDCore, examplePrivateIssuerKey)
 	
-	def generateFlatMintKeys(cdd: CDDCore, privKey: PrivateRSAKey): List[FlatMintKey] =
-		cdd.denominations.map(generateFlatMintKey(_, cdd, privKey))
+	def generateMintKeys(cdd: CDDCore, privKey: PrivateRSAKey): List[MintKey] =
+		cdd.denominations.map(generateMintKey(_, cdd, privKey))
 	
-	def generateFlatMintKey(denom: Int, cdd: CDDCore, privKey: PrivateRSAKey): FlatMintKey = {
+	def generateMintKey(denom: Int, cdd: CDDCore, privKey: PrivateRSAKey): MintKey = {
 		val keyPair = generateKeyPair(BigInt(cdd.cdd_serial), cdd.issuer_cipher_suite)
 		val publicKey = keyPair._1
 		val r = new scala.util.Random
+		val id: BigInt = hash(publicKey.bencode, "SHA-256").getOrElse(0)
+		log.debug("ID: " + id)
+		val issuerId: BigInt = hash(cdd.issuer_public_master_key.bencode, "SHA-256").getOrElse(0)
+		log.debug("Issuer ID: " + issuerId)
 		
 		val mk = MintKeyCore(
-			id = hash(publicKey.bencode, "SHA-256"),
-			issuer_id = hash(cdd.issuer_public_master_key.bencode, "SHA-256"),
+			id = id,
+			issuer_id = issuerId,
 			cdd_serial = r.nextInt(10000),
 			public_mint_key = publicKey,
 			denomination = denom,
@@ -68,8 +73,8 @@ object Testdata extends Logging {
 			coins_expiry_date = dateFormat.parse("2015-12-31T12:00:00Z")
 		)
 		
-		val mintSignature = sign(mk.bencode, examplePrivateIssuerKey, "SHA256withRSA")	
-		mk.getFlatMintKey(mintSignature)
+		val mintSignature: BigInt = sign(mk.bencode, examplePrivateIssuerKey, "SHA256withRSA").getOrElse(0)	
+		MintKey("mint key certificate", mk, mintSignature)
 	}
 	
   /*
